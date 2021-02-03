@@ -1,0 +1,12 @@
+server:
+  port: 9001
+
+eureka:
+  instance:
+    hostname: localhost01
+  client:
+    register-with-eureka: false   #是否向eureka中进行注册
+    fetch-registry: false         #false表示自身即为注册中心
+    service-url:                  #配置除本节点以外的注册中心所在的服务url
+      #      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+      defaultZone: http://localhost02:9002/eureka
