@@ -12,6 +12,7 @@
         <module>distributed-eureka-01</module>
         <module>distributed-api-common</module>
         <module>distributed-eureka-02</module>
+        <module>distributed-course-manage-provider</module>
     </modules>
 
     <properties>
