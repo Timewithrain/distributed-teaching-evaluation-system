@@ -44,14 +44,12 @@ public class CourseManageController {
         return map;
     }
 
-    @ResponseBody
     @GetMapping("/listCourse")
     public List<Course> listCourse(int startPage, int pageSize){
         List<Course> list = courseService.listCourse(startPage, pageSize);
         return list;
     }
 
-    @ResponseBody
     @GetMapping("/listCourseByClassId")
     public List<Course> listCourseByClassId(int startPage, int pageSize, int classId){
         List<Course> list = courseService.listCourseByClassId(startPage, pageSize, classId);
@@ -66,7 +64,6 @@ public class CourseManageController {
         return list;
     }
 
-    @ResponseBody
     @GetMapping("/listCourseWithNoTeacher")
     public List<Course> listCourseWithoutTeacher(int startPage, int pageSize){
         List<Course> list = courseService.listCourseWithoutTeacher(startPage, pageSize);

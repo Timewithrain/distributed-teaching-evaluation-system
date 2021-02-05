@@ -13,6 +13,7 @@
         <module>distributed-api-common</module>
         <module>distributed-eureka-02</module>
         <module>distributed-course-manage-provider</module>
+        <module>distributed-course-manage-consumer</module>
     </modules>
 
     <properties>

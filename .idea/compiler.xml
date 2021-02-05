@@ -9,6 +9,7 @@
         <module name="distributed-api-common" />
         <module name="distributed-eureka-02" />
         <module name="distributed-eureka-01" />
+        <module name="distributed-course-manage-consumer" />
         <module name="distributed-course-manage-provider" />
       </profile>
     </annotationProcessing>

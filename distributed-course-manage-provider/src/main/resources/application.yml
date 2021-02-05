@@ -43,7 +43,7 @@ eureka:
       defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
     #修改微服务名称application-id
     instance:
-      instance-id: distribute-course-manage-provider
+      instance-id: distribute-course-manage-provider-01
 
 #swagger开关
 switch-swagger-up: true
