@@ -18,8 +18,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.watermelon</groupId>
-            <artifactId>distribute-api</artifactId>
+            <groupId>com.watermelon</groupId>
+            <artifactId>distributed-api-common</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

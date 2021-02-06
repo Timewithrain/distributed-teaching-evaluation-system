@@ -112,7 +112,7 @@
              teacher as t
         where cc.teacher_id=t.teacher_id and
             cc.course_id=c.course_id and
-            cc.class_id=#{classId}
+            cc.class_id=#{param2}
     </select>
 
     <select id="listCourseByDepartmentId" parameterType="int" resultType="Course">
@@ -140,7 +140,7 @@
              teacher as t
         where cc.teacher_id=t.teacher_id and
             cc.course_id=c.course_id and
-            c.department_id=#{departmentId}
+            c.department_id=#{param2}
     </select>
 
     <select id="listCourseWithoutTeacher" resultType="Course">
@@ -180,7 +180,7 @@
              teacher as t
         where cc.teacher_id=t.teacher_id and
             cc.course_id=c.course_id and
-            c.name like '%${str}%'
+            c.name like '%${param2}%'
     </select>
 
     <insert id="addCourse" parameterType="Course">
