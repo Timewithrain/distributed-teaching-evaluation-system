@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.watermelon.mapper.ClassMapper">
+
+    <select id="getClassById" parameterType="int" resultType="Class">
+        select c.class_id as id,
+               c.number,
+               c.name,
+               c.grade,
+               d.department_id as "department.id",
+               d.name as "department.name"
+        from class as c,
+             department as d
+        where d.department_id = c.department_id and
+            c.name=#{id}
+    </select>
+
+    <select id="getClassByName" parameterType="String" resultType="Class">
+        select c.class_id as id,
+               c.number,
+               c.name,
+               c.grade,
+               d.department_id as "department.id",
+               d.name as "department.name"
+        from class as c,
+             department as d
+        where d.department_id = c.department_id and
+            c.name=#{name}
+    </select>
+
+    <select id="listClass" resultType="Class">
+        select c1.class_id as id,
+               c1.number,
+               c1.name,
+               c1.grade,
+               d.department_id as "department.id",
+               d.name as "department.name"
+        from class as c1,
+             department as d where d.department_id = c1.department_id
+    </select>
+
+    <insert id="addClass" parameterType="Class">
+        insert into class (class_id, department_id, number, name, grade)
+        values(#{id},#{department.id},#{number},#{name},#{grade});
+    </insert>
+
+    <update id="updateClass" parameterType="Class">
+        update class set department_id=#{department.id},number=#{number},name=#{name},grade=#{grade}
+        where class_id=#{id}
+    </update>
+
+    <delete id="deleteClass" parameterType="int">
+        delete from class where class_id = #{id}
+    </delete>
+
+    <delete id="addClassCourse" parameterType="int">
+        insert into class_course (class_id, course_id, teacher_id) values(#{param1},#{param2},#{param3})
+    </delete>
+
+    <delete id="deleteClassCourse" parameterType="int">
+        delete from class_course where class_id = #{param1} and course_id=#{param2}
+    </delete>
+
+    <delete id="deleteClassFromClassCourse" parameterType="int">
+        delete from class_course where class_id = #{classId}
+    </delete>
+
+    <select id="getMaxClassId" resultType="int">
+        select max(class_id) from class
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package com.watermelon.service;
+package com.watermelon.api.service;
 
 import com.watermelon.api.entity.Course;
 

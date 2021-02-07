@@ -2,6 +2,7 @@ package com.watermelon.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Course;
+import com.watermelon.api.service.CourseService;
 import com.watermelon.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

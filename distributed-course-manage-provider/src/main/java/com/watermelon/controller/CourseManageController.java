@@ -1,7 +1,7 @@
 package com.watermelon.controller;
 
 import com.watermelon.api.entity.Course;
-import com.watermelon.service.CourseService;
+import com.watermelon.api.service.CourseService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
