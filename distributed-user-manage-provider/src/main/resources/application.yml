@@ -1,0 +1,48 @@
+server:
+  port: 9012
+
+mybatis:
+  type-aliases-package: com.watermelon.api.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+    # 在控制台显示 sql 语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+spring:
+  application:
+    name: distribute-user-manage-provider
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/evaluation?serverTimezone=UTC
+    username: root
+    password: 105036
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20
+    connectionProperties: druid.stat.mergeSql=true
+
+
+#设置向Eureka进行服务注册
+eureka:
+  client:
+    service-url:
+      #当多个Eureka的hostname相同时，微服务默认向defaultZone的最后一个实例进行注册
+      defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
+    #修改微服务名称application-id
+    instance:
+      instance-id: distribute-user-manage-provider-01
+
+#swagger开关
+switch-swagger-up: true

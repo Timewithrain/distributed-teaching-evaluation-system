@@ -14,6 +14,7 @@
         <module>distributed-eureka-02</module>
         <module>distributed-course-manage-provider</module>
         <module>distributed-course-manage-consumer</module>
+        <module>distributed-user-manage-provider</module>
     </modules>
 
     <properties>

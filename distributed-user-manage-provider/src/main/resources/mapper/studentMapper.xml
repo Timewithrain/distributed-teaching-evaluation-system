@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.watermelon.mapper.StudentMapper">
+
+    <select id="getStudentById" parameterType="int" resultType="Student">
+        select student_id as id,
+               name,
+               gender,
+               birth,
+               region,
+               score,
+               entrance_date as entranceDate
+        from student where student_id=#{id}
+    </select>
+
+    <insert id="addStudent" parameterType="Student">
+        insert into student (student_id, class_id, name, gender, birth, region, score, entrance_date)
+        values(
+                  #{id},
+                  #{aClass.id},
+                  #{name},
+                  #{gender},
+                  #{birth},
+                  #{region},
+                  #{score},
+                  #{entranceDate});
+    </insert>
+
+    <update id="updateStudent" parameterType="Student">
+        update student set
+                           class_id = #{aClass.id},
+                           score = #{id},
+                           name = #{name},
+                           gender = #{gender},
+                           birth = #{birth},
+                           region = #{region},
+                           score = #{score},
+                           entrance_date = #{entranceDate}
+        where student_id=#{id}
+    </update>
+
+    <delete id="deleteStudent" parameterType="int">
+        delete from student where student_id = #{id}
+    </delete>
+
+    <select id="getMaxUserId" resultType="int">
+        select max(user_id) from user
+    </select>
+
+    <select id="listStudentWithNoCourse" resultType="Student">
+        select s.student_id as id,
+               s.name,
+               s.gender,
+               s.birth,
+               s.region,
+               s.score,
+               s.entrance_date as entranceDate,
+               c.class_id as "aclass.id",
+               c.name as "aClass.name",
+               c.number as "aClass.number",
+               c.grade as "aClass.grade",
+               c.department_id as "aClass.departmentId"
+        from student as s,
+             class as c
+        where s.class_id=c.class_id
+    </select>
+
+    <select id="listStudentByClassId" parameterType="int" resultType="Student">
+        select student_id as id,
+               name,
+               gender,
+               birth,
+               region,
+               score,
+               entrance_date as entranceDate
+        from student where class_id=#{classId}
+    </select>
+
+    <select id="searchStudent" parameterType="String" resultType="Student">
+        select s.student_id as id,
+               s.name,
+               s.gender,
+               s.birth,
+               s.region,
+               s.score,
+               s.entrance_date as entranceDate,
+               c.class_id as "aclass.id",
+               c.name as "aClass.name",
+               c.number as "aClass.number",
+               c.grade as "aClass.grade",
+               c.department_id as "aClass.departmentId"
+        from student as s,
+             class as c
+        where s.class_id=c.class_id and
+            s.name like '%${str}%'
+    </select>
+
+</mapper>
