@@ -50,6 +50,12 @@ public class CourseManageController {
         return list;
     }
 
+    @GetMapping("/listAllCourseByClassId")
+    public List<Course> listAllCourseByClassId(int classId){
+        List<Course> list = courseService.listCourseByClassId(classId);
+        return list;
+    }
+
     @GetMapping("/listCourseByClassId")
     public List<Course> listCourseByClassId(int startPage, int pageSize, int classId){
         List<Course> list = courseService.listCourseByClassId(startPage, pageSize, classId);

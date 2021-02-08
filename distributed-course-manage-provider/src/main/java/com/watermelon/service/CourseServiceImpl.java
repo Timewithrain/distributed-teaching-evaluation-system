@@ -32,6 +32,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Course> listCourseByClassId(int classId) {
+        return courseMapper.listCourseByClassId(classId);
+    }
+
+    @Override
     public List<Course> listCourseByClassId(int startPage, int pageSize, int classId) {
         Page<Course> page = new Page<>(startPage,pageSize);
         return courseMapper.listCourseByClassId(page,classId);
