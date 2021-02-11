@@ -1,0 +1,11 @@
+server:
+  port: 9022
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost01:9001/eureka/,http://localhost02:9002/eureka/
+
+#swagger开关
+switch-swagger-up: true

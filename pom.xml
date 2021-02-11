@@ -15,6 +15,7 @@
         <module>distributed-course-manage-provider</module>
         <module>distributed-course-manage-consumer</module>
         <module>distributed-user-manage-provider</module>
+        <module>distributed-user-manage-consumer</module>
     </modules>
 
     <properties>

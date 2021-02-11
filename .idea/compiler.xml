@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="distributed-course-manage-consumer" />
+        <module name="distributed-user-manage-consumer" />
         <module name="distributed-api-common" />
         <module name="distributed-user-manage-provider" />
         <module name="distributed-eureka-02" />
         <module name="distributed-eureka-01" />
-        <module name="distributed-course-manage-consumer" />
         <module name="distributed-course-manage-provider" />
       </profile>
     </annotationProcessing>

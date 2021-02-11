@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * 开启方式 application.yml -> switch-swagger-up: true
  * 默认状态 开启
  * 版本 1.0
- * 日期 2020/2/5
+ * 日期 2021/2/9
  */
 @Configuration
 @EnableSwagger2
