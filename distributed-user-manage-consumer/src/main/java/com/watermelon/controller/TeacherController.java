@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/teacher")
-public class TeachController {
+public class TeacherController {
 
     @Autowired
     private RestTemplate restTemplate;
