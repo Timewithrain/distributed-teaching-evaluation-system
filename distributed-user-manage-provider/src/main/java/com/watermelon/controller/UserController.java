@@ -6,7 +6,6 @@ import com.watermelon.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public class UserController {
 
     //修改密码
     @PostMapping("/updatePWD")
-    Map<String,String> updatePWD(@RequestBody(required = false)Query query,HttpSession session){
+    Map<String,String> updatePWD(@RequestBody(required = false)Query query){
         String oldpwd = query.getOldpwd();
         String username = query.getUsername();
         String newpwd = query.getNewpwd();
