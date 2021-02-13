@@ -43,7 +43,7 @@ public class ClassServiceImpl implements ClassService{
         List<Class> list = classMapper.listClass(page);
         //通过班级号获取课程班级课程并添加至courseList
         for (Class c : list){
-            List<Course> courseList = courseMapper.listCourseByClassId(c.getId());
+            List<Course> courseList = courseMapper.listAllCourseByClassId(c.getId());
             c.setCourseList(courseList);
         }
         return list;

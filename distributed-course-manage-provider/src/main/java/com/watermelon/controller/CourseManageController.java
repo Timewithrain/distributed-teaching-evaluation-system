@@ -52,7 +52,7 @@ public class CourseManageController {
 
     @GetMapping("/listAllCourseByClassId")
     public List<Course> listAllCourseByClassId(int classId){
-        List<Course> list = courseService.listCourseByClassId(classId);
+        List<Course> list = courseService.listAllCourseByClassId(classId);
         return list;
     }
 

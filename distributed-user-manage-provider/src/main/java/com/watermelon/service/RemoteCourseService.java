@@ -22,7 +22,7 @@ public class RemoteCourseService {
     private static final String DEPENDENCY_URL = "http://distribute-course-manage-provider/courseManage";
 
     List<Course> listCourseByClassId(int id){
-        return restTemplate.getForObject(DEPENDENCY_URL+"/listAllCourseByClassId/"+id,List.class);
+        return restTemplate.getForObject(DEPENDENCY_URL+"/listAllCourseByClassId?classId="+id,List.class);
     }
 
 }

@@ -45,7 +45,6 @@ public class AdminController {
         return map;
     }
 
-    @ResponseBody
     @GetMapping("/listUser")
     public List<User> listUser(int startPage, int pageSize) {
         String params = "?pageSize=" + pageSize + "&startPage=" + startPage;

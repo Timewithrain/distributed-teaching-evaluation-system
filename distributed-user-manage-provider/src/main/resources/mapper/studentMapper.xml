@@ -75,7 +75,7 @@
                region,
                score,
                entrance_date as entranceDate
-        from student where class_id=#{classId}
+        from student where class_id=#{param2}
     </select>
 
     <select id="searchStudent" parameterType="String" resultType="Student">
@@ -94,7 +94,7 @@
         from student as s,
              class as c
         where s.class_id=c.class_id and
-            s.name like '%${str}%'
+            s.name like '%${param2}%'
     </select>
 
 </mapper>

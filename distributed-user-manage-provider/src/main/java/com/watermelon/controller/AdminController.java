@@ -53,7 +53,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteUser")
+    @DeleteMapping("/deleteUser/{id}")
     public Map<String, String> deleteUser(@RequestParam(value="id",required=false) int id){
         userService.deleteUser(id);
         Map<String,String> map = new HashMap<>();
