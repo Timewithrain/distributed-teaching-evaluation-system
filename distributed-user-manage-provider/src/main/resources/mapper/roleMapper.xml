@@ -30,7 +30,7 @@
 
     <!-- 维护role_permission表 -->
     <insert id="addRolePermission" parameterType="int">
-        insert into role_permission (role_id, permission_id) values(#{roleId},#{permsId})
+        insert into role_permission (role_id, permission_id) values(#{param1},#{param2})
     </insert>
 
     <select id="getRolesPermissionsId" parameterType="int" resultType="int">
@@ -38,7 +38,7 @@
     </select>
 
     <delete id="deleteRolePermission" parameterType="int">
-        delete from role_permission where role_id=#{roleId} and permission_id=#{permsId}
+        delete from role_permission where role_id=#{param1} and permission_id=#{param2}
     </delete>
 
     <delete id="deleteAllRolePermission" parameterType="int">

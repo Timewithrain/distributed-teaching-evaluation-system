@@ -35,6 +35,7 @@ public class AdminController {
     @Autowired
     private SupervisorService supervisorService;
 
+    @Deprecated
     @PostMapping("/addUser")
     public Map<String,String> addUser(@RequestBody(required=false) User user) {
         userService.addUser(user);
@@ -206,7 +207,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteTeacher")
+    @DeleteMapping("/deleteTeacher/{id}")
     public Map<String, String> deleteTeacher(@RequestParam(value="id",required=false) int id){
         teacherService.deleteTeacher(id);
         Map<String,String> map = new HashMap<>();
@@ -239,7 +240,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteStudent")
+    @DeleteMapping("/deleteStudent/{id}")
     public Map<String, String> deleteStudent(@RequestParam(value="id",required=false) int id){
         studentService.deleteStudent(id);
         Map<String,String> map = new HashMap<>();
@@ -289,7 +290,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteAdmin")
+    @DeleteMapping("/deleteAdmin/{id}")
     public Map<String,String> deleteAdmin(@RequestParam(value="id",required=false) int id){
         adminService.deleteAdmin(id);
         Map<String,String> map = new HashMap<>();

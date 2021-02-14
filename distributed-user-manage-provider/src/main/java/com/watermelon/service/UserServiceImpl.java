@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int addUser(User user) {
         user.setRoleId(user.getRole().getId());
+        user.setId(userMapper.getMaxUserId()+1);
         return userMapper.addUser(user);
     }
 

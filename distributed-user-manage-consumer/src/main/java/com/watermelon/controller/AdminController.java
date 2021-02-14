@@ -253,7 +253,7 @@ public class AdminController {
 
     @PostMapping("/addAdmin")
     public Map<String,String> addAdmin(@RequestBody(required=false) Admin admin){
-        ResponseEntity<Map> entity = restTemplate.postForEntity(PROVIDER_URL+"/addStudent",admin,Map.class);
+        ResponseEntity<Map> entity = restTemplate.postForEntity(PROVIDER_URL+"/addAdmin",admin,Map.class);
         return entity.getBody();
     }
 
