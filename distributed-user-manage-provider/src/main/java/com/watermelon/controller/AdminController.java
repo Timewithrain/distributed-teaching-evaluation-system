@@ -89,9 +89,11 @@ public class AdminController {
     }
 
     @PostMapping("/addRolePermission")
-    public Map<String, String> addRolePermission(@RequestParam(value="roleId",required=false) int roleId,
-                                                 @RequestParam(value="permsId",required=false) int permsId){
+    public Map<String, String> addRolePermission(@RequestBody(required=false) Map<String,Integer> params){
+        int roleId = params.get("roleId");
+        int permsId = params.get("permsId");
         roleService.addRolePermission(roleId, permsId);
+        System.out.println("role:"+roleId+"perm:"+permsId);
         Map<String,String> map = new HashMap<>();
         map.put("status","200");
         map.put("message","成功为角色添加权限");

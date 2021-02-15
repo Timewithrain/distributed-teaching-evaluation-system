@@ -63,14 +63,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void addRole(Role role) {
         int number = roleMapper.getMaxRoleId();
+        role.setId(number+1);
+        roleMapper.addRole(role);
         List<Permission> list = role.getPermissions();
         if (list!=null){
             for (Permission perms : list){
                 roleMapper.addRolePermission(role.getId(),perms.getId());
             }
         }
-        role.setId(number+1);
-        roleMapper.addRole(role);
     }
 
     @Override
