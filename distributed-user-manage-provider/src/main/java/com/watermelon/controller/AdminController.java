@@ -93,7 +93,6 @@ public class AdminController {
         int roleId = params.get("roleId");
         int permsId = params.get("permsId");
         roleService.addRolePermission(roleId, permsId);
-        System.out.println("role:"+roleId+"perm:"+permsId);
         Map<String,String> map = new HashMap<>();
         map.put("status","200");
         map.put("message","成功为角色添加权限");
@@ -110,7 +109,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteRole")
+    @DeleteMapping("/deleteRole/{id}")
     public Map<String, String> deleteRole(@RequestParam(value="id",required=false) int id){
         roleService.deleteRole(id);
         Map<String,String> map = new HashMap<>();
@@ -143,7 +142,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deletePerms")
+    @DeleteMapping("/deletePerms/{id}")
     public Map<String, String> deletePerms(@RequestParam(value="id",required=false) int id){
         permissionService.deletePermission(id);
         Map<String,String> map = new HashMap<>();
@@ -176,7 +175,7 @@ public class AdminController {
         return map;
     }
 
-    @DeleteMapping("/deleteSupervisor")
+    @DeleteMapping("/deleteSupervisor/{id}")
     public Map<String, String> deleteSupervisor(@RequestParam(value="id",required=false) int id){
         supervisorService.deleteSupervisor(id);
         Map<String,String> map = new HashMap<>();

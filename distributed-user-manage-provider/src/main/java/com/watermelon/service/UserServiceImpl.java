@@ -127,13 +127,17 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 当新的用户角色和原本角色不同时，修改角色的数据库信息（有待完善级联删除）
+     * user1为根据user.id从数据库读取的原有用户数据
+     * user为从用户端回传的更新的user数据
+     * 当user.role.id与user1.role.id(roleId)不同时表示用户的角色已被更改，需要重新添加用户信息
      * @param user1 数据库原本保留的用户身份信息
      * @param user  回传的新的用户身份信息
      */
     private void updateUserInfo(User user1,User user){
+        //当前端回传的角色id与系统已有角色id不同时，则更新用户角色，否则仅更新用户基本信息
         if (user1.getRoleId()!=user.getRole().getId()){
             //删除原有用户信息
-            switch (user1.getRole().getId()){
+            switch (user1.getRoleId()){
                 case 1:
                     adminMapper.deleteAdmin(user1.getId());
                     break;
@@ -164,6 +168,26 @@ public class UserServiceImpl implements UserService {
                 case 4:
                     Supervisor supervisor = new Supervisor(user);
                     supervisorMapper.addSupervisor(supervisor);
+                    break;
+            }
+        }else{
+            //当回传的用户角色id与系统id一致时，仅更新用户基本信息，此处更新用户对应角色表中的信息
+            switch (user1.getRoleId()){
+                case 1:
+                    Admin admin = new Admin(user);
+                    adminMapper.updateAdmin(admin);
+                    break;
+                case 2:
+                    Teacher teacher = new Teacher(user);
+                    teacherMapper.updateTeacher(teacher);
+                    break;
+                case 3:
+                    Student student = new Student(user);
+                    studentMapper.updateStudent(student);
+                    break;
+                case 4:
+                    Supervisor supervisor = new Supervisor(user);
+                    supervisorMapper.updateSupervisor(supervisor);
                     break;
             }
         }
