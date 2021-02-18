@@ -16,8 +16,7 @@ public class StudentController {
 
     private static final String PROVIDER_URL = "http://distribute-user-manage-provider/student";
 
-    @ResponseBody
-    @GetMapping("/getTeacher")
+    @GetMapping("/getStudent")
     public Student getTeacher(){
         return restTemplate.getForObject(PROVIDER_URL + "/getTeacher",Student.class);
     }
@@ -26,9 +25,9 @@ public class StudentController {
      * 修改学生的对应教师
      * @param student
      */
-    @PutMapping("/updateTeacher")
+    @PutMapping("/updateStudent")
     public void updateTeacher(@RequestBody(required=false) Student student) {
-        restTemplate.put(PROVIDER_URL+"/updateTeacher",student, Map.class);
+        restTemplate.put(PROVIDER_URL+"/updateStudent",student, Map.class);
     }
 
 }

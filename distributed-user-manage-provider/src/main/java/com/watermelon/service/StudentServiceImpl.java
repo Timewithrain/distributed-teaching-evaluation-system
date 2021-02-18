@@ -33,10 +33,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentById(int id) {
         Student student = studentMapper.getStudentById(id);
-        User u = userMapper.getUserById(id);
-        if (u!=null){
-            student.addUserInfo(u);
-        }
+        student = addRoleFieldOfStudent(student);
+        student = addCourseListFieldOfStudent(student);
         return student;
     }
 
@@ -64,14 +62,7 @@ public class StudentServiceImpl implements StudentService {
         Page<Course> page = new Page<>(startPage,pageSize);
         List<Student> list = studentMapper.listStudentWithNoCourse(page);
         for (Student s : list){
-            User u = userMapper.getUserById(s.getId());
-            if (u!=null){
-                s.addUserInfo(u);
-                Role r = roleService.getRoleById(s.getRoleId());
-                if (r!=null){
-                    s.setRole(r);
-                }
-            }
+            s = addRoleFieldOfStudent(s);
         }
         return list;
     }
@@ -80,21 +71,8 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> listStudent(int startPage, int pageSize) {
         List<Student> list = studentMapper.listStudentWithNoCourse(new Page<>(startPage,pageSize));
         for (Student s : list){
-            User u = userMapper.getUserById(s.getId());
-            if (u!=null){
-                s.addUserInfo(u);
-                Role r = roleService.getRoleById(s.getRoleId());
-                if (r!=null){
-                    s.setRole(r);
-                }
-            }
-            //通过courseMapper根据学生的班级号获取课程，并添加进学生的courseList属性
-            Class aClass = s.getAClass();
-            if (aClass!=null){
-                int classId = aClass.getId();
-                List<Course> courseList =  RemoteCourseService.listCourseByClassId(classId);
-                s.setCourseList(courseList);
-            }
+            s = addRoleFieldOfStudent(s);
+            s = addCourseListFieldOfStudent(s);
         }
         return list;
     }
@@ -104,14 +82,8 @@ public class StudentServiceImpl implements StudentService {
         Page<Course> page = new Page<>(startPage,pageSize);
         List<Student> list = studentMapper.listStudentByClassId(page,calssId);
         for (Student s : list){
-            User u = userMapper.getUserById(s.getId());
-            if (u!=null){
-                s.addUserInfo(u);
-                Role r = roleService.getRoleById(s.getRoleId());
-                if (r!=null){
-                    s.setRole(r);
-                }
-            }
+            s = addRoleFieldOfStudent(s);
+            s = addCourseListFieldOfStudent(s);
         }
         return list;
     }
@@ -120,21 +92,8 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> searchStudent(int startPage, int pageSize, String str) {
         List<Student> list = studentMapper.searchStudent(new Page<>(startPage,pageSize),str);
         for (Student s : list){
-            User u = userMapper.getUserById(s.getId());
-            if (u!=null){
-                s.addUserInfo(u);
-                Role r = roleService.getRoleById(s.getRoleId());
-                if (r!=null){
-                    s.setRole(r);
-                }
-            }
-            //通过courseMapper根据学生的班级号获取课程，并添加进学生的courseList属性
-            Class aClass = s.getAClass();
-            if (aClass!=null){
-                int classId = aClass.getId();
-                List<Course> courseList =  RemoteCourseService.listCourseByClassId(classId);
-                s.setCourseList(courseList);
-            }
+            s = addRoleFieldOfStudent(s);
+            s = addCourseListFieldOfStudent(s);
         }
         return list;
     }
@@ -152,6 +111,39 @@ public class StudentServiceImpl implements StudentService {
         user.setRole(student.getRole());
         user.setIdNumber(student.getIdNumber());
         return user;
+    }
+
+    /**
+     * 传入Student，根据学生id从数据库中补全Student的User及Role字段信息
+     * @param s Student
+     * @return s Student
+     */
+    private Student addRoleFieldOfStudent(Student s){
+        User u = userMapper.getUserById(s.getId());
+        if (u!=null){
+            s.addUserInfo(u);
+            Role r = roleService.getRoleById(s.getRoleId());
+            if (r!=null){
+                s.setRole(r);
+            }
+        }
+        return s;
+    }
+
+    /**
+     * 传入Student，根据学生班级id添加学生的CourseList课程列表字段信息
+     * @param s Student
+     * @return s Student
+     */
+    private Student addCourseListFieldOfStudent(Student s){
+        //通过courseMapper根据学生的班级号获取课程，并添加进学生的courseList属性
+        Class aClass = s.getAClass();
+        if (aClass!=null){
+            int classId = aClass.getId();
+            List<Course> courseList =  RemoteCourseService.listCourseByClassId(classId);
+            s.setCourseList(courseList);
+        }
+        return s;
     }
 
 }

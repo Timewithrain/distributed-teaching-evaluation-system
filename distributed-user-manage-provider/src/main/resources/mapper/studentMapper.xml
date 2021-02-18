@@ -31,7 +31,6 @@
     <update id="updateStudent" parameterType="Student">
         update student set
                            class_id = #{aClass.id},
-                           score = #{id},
                            name = #{name},
                            gender = #{gender},
                            birth = #{birth},

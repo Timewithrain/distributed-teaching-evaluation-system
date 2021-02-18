@@ -19,15 +19,14 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @ResponseBody
-    @GetMapping("/getTeacher")
-    public Student getTeacher(HttpSession session){
+    @GetMapping("/getStudent")
+    public Student getStudent(HttpSession session){
         String username = (String) session.getAttribute("username");
         User user = userService.getUserByName(username);
         return studentService.getStudentById(user.getId());
     }
 
-    @PutMapping("/updateTeacher")
+    @PutMapping("/updateStudent")
     public void updateTeacher(@RequestBody(required=false) Student student) {
         studentService.updateStudent(student);
     }

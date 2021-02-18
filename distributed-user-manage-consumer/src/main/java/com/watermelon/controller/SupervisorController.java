@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/supervisor")
@@ -20,9 +19,21 @@ public class SupervisorController {
 
     private static final String PROVIDER_URL = "http://distribute-user-manage-provider/supervisor";
 
+    @Deprecated
     @GetMapping("/listSupervisor")
     public Object listSupervisor(){
         return restTemplate.getForObject(PROVIDER_URL+"/listSupervisor", ResultUtil.class);
+    }
+
+    @GetMapping("/getSupervisor")
+    public Supervisor getSupervisor(){
+        return restTemplate.getForObject(PROVIDER_URL + "/getSupervisor", Supervisor.class);
+    }
+
+    @PutMapping("/updateSupervisor")
+    public Object updateSupervisor(@RequestBody(required=false) Supervisor supervisor) {
+        restTemplate.put(PROVIDER_URL+"/updateSupervisor",supervisor, Map.class);
+        return ResultUtil.success();
     }
 
     // 设置督导可评价的课程
@@ -36,6 +47,7 @@ public class SupervisorController {
         ResponseEntity<ResultUtil> entity = restTemplate.postForEntity(url,null,ResultUtil.class,params);
         return entity.getBody();
     }
+
     @DeleteMapping("/deleteCourse")
     public Object deleteSupervisorCourse(int supervisorId, int courseId, int teacherId){
         String url = PROVIDER_URL + "/deleteCourse?supervisorId={supervisorId}&courseId={courseId}&teacherId={teacherId}";
