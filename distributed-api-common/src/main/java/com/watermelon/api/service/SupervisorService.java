@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
 
 import java.util.List;
@@ -22,5 +23,7 @@ public interface SupervisorService {
     void deleteSupervisor(int id);
 
     List<Supervisor> listSupervisor(int startPage, int pageSize);
+
+    List<Course> listCourseBySupervisorId(int startPage, int pageSize, int id);
 
 }

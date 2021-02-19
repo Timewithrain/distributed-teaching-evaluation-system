@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Teacher;
 
 import java.util.List;
@@ -15,5 +16,7 @@ public interface TeacherService {
     void deleteTeacher(int id);
 
     List<Teacher> listTeacher(int startPage, int pageSize);
+
+    List<Course> listCourseByTeacherId(int startPage, int pageSize, int teacherId);
 
 }

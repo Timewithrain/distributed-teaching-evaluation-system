@@ -2,7 +2,10 @@ package com.watermelon.controller;
 
 import com.watermelon.api.entity.Query;
 import com.watermelon.api.entity.User;
+import com.watermelon.api.util.ResultUtil;
+import com.watermelon.api.util.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +22,20 @@ public class UserController {
     private RestTemplate restTemplate;
 
     private static final String PROVIDER_URL = "http://distribute-user-manage-provider/user";
+
+    @PostMapping("/login")
+    public Object login(@RequestBody User user){
+        String url = PROVIDER_URL + "/login";
+        ResponseEntity<ResultUtil> entity = restTemplate.postForEntity(url,user,ResultUtil.class);
+        return entity.getBody();
+    }
+
+    @GetMapping("/logout")
+    public Object logout(){
+        String url = PROVIDER_URL + "/logout";
+        ResponseEntity<ResultUtil> entity = restTemplate.getForEntity(url,ResultUtil.class);
+        return entity.getBody();
+    }
 
     //找回密码
     @PostMapping("/findPWD")

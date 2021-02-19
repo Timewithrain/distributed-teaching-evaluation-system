@@ -22,8 +22,14 @@ public class StudentController {
     @GetMapping("/getStudent")
     public Student getStudent(HttpSession session){
         String username = (String) session.getAttribute("username");
-        User user = userService.getUserByName(username);
-        return studentService.getStudentById(user.getId());
+        System.out.println("========="+username+"=========");
+        System.out.println();
+        if (username!=null){
+            User user = userService.getUserByName(username);
+            return studentService.getStudentById(user.getId());
+        }else {
+            return null;
+        }
     }
 
     @PutMapping("/updateStudent")

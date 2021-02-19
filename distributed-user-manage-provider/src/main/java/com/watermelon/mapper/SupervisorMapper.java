@@ -1,6 +1,7 @@
 package com.watermelon.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,8 @@ public interface SupervisorMapper {
 
     List<Supervisor> listSupervisor(Page<Supervisor> page);
 
-    // 设置督导可评价的课程老师
+    List<Course> listCourseBySupervisorId(Page<Course> page,int id);
+
     /**
      * 添加督导可评价的课程老师
      * @param supervisorId

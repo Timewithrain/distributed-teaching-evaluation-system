@@ -69,6 +69,12 @@ public class TeacherServiceImpl implements TeacherService {
         return list;
     }
 
+    @Override
+    public List<Course> listCourseByTeacherId(int startPage, int pageSize, int teacherId) {
+        Page<Course> page = new Page<>(startPage,pageSize);
+        return teacherMapper.listCourseByTeacherId(page,teacherId);
+    }
+
     /**
      * 将Teacher转换为User便于存储和管理
      * @return user User

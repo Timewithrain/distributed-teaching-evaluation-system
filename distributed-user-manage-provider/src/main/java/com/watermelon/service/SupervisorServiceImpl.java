@@ -84,6 +84,19 @@ public class SupervisorServiceImpl implements SupervisorService {
     }
 
     /**
+     * 根据督导的id查询该督导所负责的课程列表
+     * @param startPage
+     * @param pageSize
+     * @param id 督导id
+     * @return List<Course> 课程列表
+     */
+    @Override
+    public List<Course> listCourseBySupervisorId(int startPage, int pageSize, int id) {
+        Page<Course> page = new Page<>(startPage,pageSize);
+        return supervisorMapper.listCourseBySupervisorId(page,id);
+    }
+
+    /**
      * 将Supervisor转换为User便于存储和管理
      * @return user User
      */

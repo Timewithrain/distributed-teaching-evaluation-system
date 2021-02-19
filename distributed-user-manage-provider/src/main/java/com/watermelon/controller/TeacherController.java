@@ -1,5 +1,6 @@
 package com.watermelon.controller;
 
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Teacher;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.service.TeacherService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -30,6 +32,12 @@ public class TeacherController {
     @PutMapping("/updateTeacher")
     public void updateTeacher(@RequestBody(required=false) Teacher teacher) {
         teacherService.updateTeacher(teacher);
+    }
+
+    @GetMapping("/listCourse")
+    public List<Course> listCourseByTeacherId(int startPage, int pageSize, int teacherId){
+        List<Course> list = teacherService.listCourseByTeacherId(startPage, pageSize, teacherId);
+        return list;
     }
 
 }

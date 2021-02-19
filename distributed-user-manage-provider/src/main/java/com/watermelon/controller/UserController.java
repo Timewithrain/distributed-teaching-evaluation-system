@@ -3,9 +3,12 @@ package com.watermelon.controller;
 import com.watermelon.api.entity.Query;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.service.UserService;
+import com.watermelon.api.util.ResultUtil;
+import com.watermelon.api.util.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +18,27 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/login")
+    public Object login(@RequestBody User user, HttpSession session){
+        User u = userService.getUserByName(user.getName());
+        if (u!=null&&u.getPassword().equals(user.getPassword())){
+            session.setAttribute("id",user.getId());
+            session.setAttribute("username",user.getName());
+            System.out.println("-----" + session.getAttribute("username")+"-----");
+            return ResultUtil.success();
+        }else {
+            //登陆失败
+            return ResultUtil.error(StatusCode.LOGIN_FAIL);
+        }
+    }
+
+    @GetMapping("/logout")
+    public Object logout(HttpSession session){
+        session.removeAttribute("id");
+        session.removeAttribute("username");
+        return ResultUtil.success();
+    }
 
     //找回密码
     @PostMapping("/findPWD")

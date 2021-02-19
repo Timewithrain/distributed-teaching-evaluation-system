@@ -1,5 +1,6 @@
 package com.watermelon.controller;
 
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.service.SupervisorService;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/supervisor")
@@ -56,4 +59,11 @@ public class SupervisorController {
         supervisorService.deleteSupervisorCourse(supervisorId,courseId,teacherId);
         return ResultUtil.success();
     }
+
+    @GetMapping("/listCourse")
+    public List<Course> listCourseBySupervisorId(int startPage, int pageSize, int supervisorId){
+        List<Course> list = supervisorService.listCourseBySupervisorId(startPage, pageSize, supervisorId);
+        return list;
+    }
+
 }

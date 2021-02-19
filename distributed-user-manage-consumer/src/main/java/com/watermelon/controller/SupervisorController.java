@@ -1,5 +1,6 @@
 package com.watermelon.controller;
 
+import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
 import com.watermelon.api.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/supervisor")
@@ -58,4 +60,11 @@ public class SupervisorController {
         restTemplate.delete(url,params);
         return ResultUtil.success();
     }
+
+    @GetMapping("/listCourse")
+    public List<Course> listCourseBySupervisorId(int startPage, int pageSize, int supervisorId){
+        String url = PROVIDER_URL + "/listCourse?startPage="+startPage+"&pageSize="+pageSize+"&supervisorId="+supervisorId;
+        return restTemplate.getForObject(url,List.class);
+    }
+
 }

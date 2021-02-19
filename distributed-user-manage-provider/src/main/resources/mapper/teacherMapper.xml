@@ -86,4 +86,35 @@
                t.graduate_school as graduateSchool
         from teacher as t, department as d where t.department_id=d.department_id
     </select>
+
+    <select id="listCourseByTeacherId" parameterType="int" resultType="Course">
+        select c.course_id as id,
+               c.name,
+               c.number,
+               c.course_type as courseType,
+               c.course_class as courseClass,
+               c.course_dep as courseDep,
+               c.score,
+               c.time,
+               t.teacher_id as "teacher.id",
+               t.name as "teacher.name",
+               t.birth as "teacher.birth",
+               t.region as "teacher.region",
+               t.total_class as "teacher.totalClass",
+               t.entrance_date as "teacher.entranceDate",
+               t.job_title as "teacher.jobTitle",
+               t.grant_date as "teacher.grantDate",
+               t.political_status as "teacher.politicalStatus",
+               t.degree as "teacher.degree",
+               t.graduate_school as "teacher.graduateSchool"
+        from (select course_id,teacher_id
+              from class_course
+              where teacher_id=#{param2}) as cc,
+             teacher as t,
+             course as c
+        where t.teacher_id=cc.teacher_id and
+            c.course_id=cc.course_id
+
+    </select>
+
 </mapper>
