@@ -7,6 +7,7 @@ import com.watermelon.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -20,9 +21,11 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping("/getStudent")
-    public Student getStudent(HttpSession session){
+    public Student getStudent(HttpServletRequest request){
+        HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         System.out.println("========="+username+"=========");
+        System.out.println("========="+session.getId()+"=========");
         System.out.println();
         if (username!=null){
             User user = userService.getUserByName(username);

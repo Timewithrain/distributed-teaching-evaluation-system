@@ -1,6 +1,13 @@
 server:
   port: 9022
 
+spring:
+  redis:
+    host: 175.24.40.52
+    port: 6379
+    database: 1
+    password:
+
 eureka:
   client:
     register-with-eureka: false

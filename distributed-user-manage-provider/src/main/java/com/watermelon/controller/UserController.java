@@ -8,6 +8,7 @@ import com.watermelon.api.util.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Object login(@RequestBody User user, HttpSession session){
+    public Object login(@RequestBody User user, HttpServletRequest request){
+        HttpSession session = request.getSession();
         User u = userService.getUserByName(user.getName());
         if (u!=null&&u.getPassword().equals(user.getPassword())){
             session.setAttribute("id",user.getId());

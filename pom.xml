@@ -16,6 +16,7 @@
         <module>distributed-course-manage-consumer</module>
         <module>distributed-user-manage-provider</module>
         <module>distributed-user-manage-consumer</module>
+        <module>distributed-zuul</module>
     </modules>
 
     <properties>
@@ -61,10 +62,10 @@
                 <groupId>org.springframework.session</groupId>
                 <artifactId>spring-session-data-redis</artifactId>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.commons</groupId>-->
+<!--                <artifactId>commons-pool2</artifactId>-->
+<!--            </dependency>-->
 
         </dependencies>
     </dependencyManagement>

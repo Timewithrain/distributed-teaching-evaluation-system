@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -17,7 +19,9 @@ public class StudentController {
     private static final String PROVIDER_URL = "http://distribute-user-manage-provider/student";
 
     @GetMapping("/getStudent")
-    public Student getStudent(){
+    public Student getStudent(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        System.out.println("========="+session.getId()+"=========");
         return restTemplate.getForObject(PROVIDER_URL + "/getStudent",Student.class);
     }
 

@@ -1,0 +1,32 @@
+server:
+  port: 9003
+
+spring:
+  application:
+    name: distribute-zuul-server
+  redis:
+    host: 175.24.40.52
+    port: 6379
+    database: 1
+    password:
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
+    instance:
+      instance-id: zuulserver
+      prefer-ip-address: true
+
+zuul:
+  sensitive-headers: "*"
+
+#zuul:
+#  routes:
+#    user-manager:
+#      serviceId: distribute-user-manage-provider
+#      path: /**                                        #替换路径信息，使用/dept/**路径，隐藏服务信息
+#      sensitive-headers: "*"
+#  ignored-services: distribute-user-manage-provider    #限制原路径，使原路径无法访问服务，保护服务
+#  prefix: /watermelon
