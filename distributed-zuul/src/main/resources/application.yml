@@ -9,6 +9,9 @@ spring:
     port: 6379
     database: 1
     password:
+    timeout: 3000
+  session:
+    store-type: redis
 
 
 eureka:
@@ -20,7 +23,12 @@ eureka:
       prefer-ip-address: true
 
 zuul:
-  sensitive-headers: "*"
+#  sensitive-headers: "*"
+  routes:
+    distribute-user-manage-provider:
+      path: /user-manager/**
+      serviceId: distribute-user-manage-provider-01
+      sensitiveHeaders: "*"
 
 #zuul:
 #  routes:

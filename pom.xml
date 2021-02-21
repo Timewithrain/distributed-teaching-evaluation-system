@@ -17,6 +17,7 @@
         <module>distributed-user-manage-provider</module>
         <module>distributed-user-manage-consumer</module>
         <module>distributed-zuul</module>
+        <module>distributed-evaluation-manage-provider</module>
     </modules>
 
     <properties>

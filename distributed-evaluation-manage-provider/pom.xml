@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>distributed-user-manage-provider</artifactId>
+    <artifactId>distributed-evaluation-manage-provider</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
