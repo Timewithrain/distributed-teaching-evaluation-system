@@ -7,7 +7,7 @@ mybatis:
   configuration:
     mapUnderscoreToCamelCase: true
     # 在控制台显示 sql 语句
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 spring:
   application:
@@ -36,8 +36,9 @@ spring:
     port: 6379
     database: 1
     password:
-
-
+    timeout: 3000
+  session:
+    store-type: redis
 
 #设置向Eureka进行服务注册
 eureka:

@@ -7,6 +7,9 @@ spring:
     port: 6379
     database: 1
     password:
+    timeout: 3000
+  session:
+    store-type: redis
 
 eureka:
   client:

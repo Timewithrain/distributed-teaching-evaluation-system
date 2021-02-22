@@ -3,15 +3,11 @@ package com.watermelon.controller;
 import com.watermelon.api.entity.Query;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.util.ResultUtil;
-import com.watermelon.api.util.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

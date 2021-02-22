@@ -23,18 +23,18 @@ eureka:
       prefer-ip-address: true
 
 zuul:
-#  sensitive-headers: "*"
+  #将所有header字段设为敏感字段，否则无法正常获取sessionId
+  sensitive-headers: "*"
   routes:
     distribute-user-manage-provider:
+      serviceId: distribute-user-manage-provider
+      #替换路径信息，使用/user-manager/**路径，隐藏服务信息
       path: /user-manager/**
-      serviceId: distribute-user-manage-provider-01
-      sensitiveHeaders: "*"
-
-#zuul:
-#  routes:
-#    user-manager:
-#      serviceId: distribute-user-manage-provider
-#      path: /**                                        #替换路径信息，使用/dept/**路径，隐藏服务信息
-#      sensitive-headers: "*"
-#  ignored-services: distribute-user-manage-provider    #限制原路径，使原路径无法访问服务，保护服务
+    distribute-course-manage-provider:
+      serviceId: distribute-course-manage-provider
+      path: /course-manager/**
+  #添加前置url
 #  prefix: /watermelon
+#  #忽略服务名，限制通过服务名直接获取后台服务，保护服务
+#  ignored-services: distribute-user-manage-provider
+

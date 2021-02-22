@@ -27,7 +27,6 @@ public class UserController {
         if (u!=null&&u.getPassword().equals(user.getPassword())){
             session.setAttribute("id",user.getId());
             session.setAttribute("username",user.getName());
-            System.out.println("-----" + session.getAttribute("username")+"-----");
             return ResultUtil.success();
         }else {
             //登陆失败
@@ -36,7 +35,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public Object logout(HttpSession session){
+    public Object logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
         session.removeAttribute("id");
         session.removeAttribute("username");
         return ResultUtil.success();

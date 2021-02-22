@@ -41,7 +41,16 @@ public class SupervisorServiceImpl implements SupervisorService {
 
     @Override
     public Supervisor getSupervisorById(int id) {
-        return supervisorMapper.getSupervisorById(id);
+        Supervisor supervisor = supervisorMapper.getSupervisorById(id);
+        User u = userMapper.getUserById(id);
+        if (u!=null){
+            supervisor.addUserInfo(u);
+            Role r = roleService.getRoleById(supervisor.getRoleId());
+            if (r!=null){
+                supervisor.setRole(r);
+            }
+        }
+        return supervisor;
     }
 
     @Override

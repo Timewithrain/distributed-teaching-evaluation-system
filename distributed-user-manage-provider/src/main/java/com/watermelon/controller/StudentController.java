@@ -24,9 +24,6 @@ public class StudentController {
     public Student getStudent(HttpServletRequest request){
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
-        System.out.println("========="+username+"=========");
-        System.out.println("========="+session.getId()+"=========");
-        System.out.println();
         if (username!=null){
             User user = userService.getUserByName(username);
             return studentService.getStudentById(user.getId());

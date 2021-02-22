@@ -19,9 +19,7 @@ public class StudentController {
     private static final String PROVIDER_URL = "http://distribute-user-manage-provider/student";
 
     @GetMapping("/getStudent")
-    public Student getStudent(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        System.out.println("========="+session.getId()+"=========");
+    public Student getStudent(){
         return restTemplate.getForObject(PROVIDER_URL + "/getStudent",Student.class);
     }
 
