@@ -101,4 +101,10 @@ public class UserController {
             return map;
         }
     }
+
+    @GetMapping("/getUserByName")
+    public User getUserByName(String name){
+        return userService.getUserByName(name);
+    }
+
 }

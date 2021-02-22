@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+/**
+ * 在EvaluationController中通过@Validated注解对entity进行数据校验
+ * 在Controller中依据IndividualEvaluation各字段的注解进行逻辑及数据校验
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
