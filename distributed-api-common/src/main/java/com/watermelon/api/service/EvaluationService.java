@@ -30,19 +30,22 @@ public interface EvaluationService {
      */
     List<Course> getCoursesByStuId(int id);
 
-
     IPage<Course> getCoursesByStuId(Integer id, Integer startPage, Integer pageSize,String courseName);
+
     IPage<Course> getCoursesBySuperId(Integer id, Integer startPage, Integer pageSize,String courseName);
+
     IPage<Course> getCoursesByTeacherId(Integer id, Integer startPage, Integer pageSize,String courseName);
-    IPage getCoursesByAdmin(Integer startPage,Integer pageSize,String courseNmae);
+
+    IPage getCoursesByAdmin(Integer startPage,Integer pageSize,String courseName);
 
     /**
-     * 获取督导的个人评价
-     * @param superId
-     * @param teacherId
+     * 获取督导本人所作过的评价，根据督导、教师、课程唯一确定一条评价
+     * @param supervisorId 督导Id
+     * @param teacherId 教师Id
+     * @param courseId 课程Id
      * @return
      */
-    IndividualEvaluation getSuperIndiEvaluation(int superId, int teacherId, int courseId);
+    IndividualEvaluation getSuperIndiEvaluation(int supervisorId, int teacherId, int courseId);
 
     /**
      * 获取教师的个人评价

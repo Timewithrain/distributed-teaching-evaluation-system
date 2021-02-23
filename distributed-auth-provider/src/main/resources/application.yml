@@ -1,0 +1,14 @@
+server:
+  port: 9004
+
+spring:
+  application:
+    name: distribute-auth-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
+    instance:
+      instance-id: distribute-auth-server
+      prefer-ip-address: true

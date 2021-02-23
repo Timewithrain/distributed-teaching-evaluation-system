@@ -9,6 +9,7 @@
         <module name="distributed-zuul" />
         <module name="distributed-course-manage-consumer" />
         <module name="distributed-user-manage-consumer" />
+        <module name="distributed-auth-provider" />
         <module name="distributed-api-common" />
         <module name="distributed-user-manage-provider" />
         <module name="distributed-eureka-02" />

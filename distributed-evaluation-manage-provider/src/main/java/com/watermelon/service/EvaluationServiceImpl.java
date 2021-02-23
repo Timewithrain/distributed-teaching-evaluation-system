@@ -67,8 +67,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 
     // 获取个人评价
     @Override
-    public IndividualEvaluation getSuperIndiEvaluation(int superId, int teacherId, int courseId) {
-        return evaluationMapper.getSuperIndiEvaluation(superId,teacherId,courseId);
+    public IndividualEvaluation getSuperIndiEvaluation(int supervisorId, int teacherId, int courseId) {
+        return evaluationMapper.getSuperIndiEvaluation(supervisorId,teacherId,courseId);
     }
 
     @Override
