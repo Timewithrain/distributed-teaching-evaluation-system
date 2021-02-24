@@ -11,6 +11,8 @@ public interface UserService {
 
     User getUserByName(String name);
 
+    User getUserDetailsByName(String name);
+
     String getNameById(int id);
 
     int addUser(User user);

@@ -62,6 +62,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserDetailsByName(String name) {
+        User user = userMapper.getUserByName(name);
+        user.setRole(roleService.getRoleById(user.getRoleId()));
+        user.setPassword(null);
+        user.setIdNumber(null);
+        return user;
+    }
+
+    @Override
     public String getNameById(int id) {
         String name = "";
         User user = userMapper.getUserById(id);

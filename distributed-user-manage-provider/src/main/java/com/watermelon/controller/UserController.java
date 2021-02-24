@@ -107,4 +107,9 @@ public class UserController {
         return userService.getUserByName(name);
     }
 
+    @GetMapping("/getUserDetailsByName")
+    public User getUserRoleByName(String username){
+        return userService.getUserDetailsByName(username);
+    }
+
 }
