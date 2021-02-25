@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
     public User getUserDetailsByName(String name) {
         User user = userMapper.getUserByName(name);
         user.setRole(roleService.getRoleById(user.getRoleId()));
-        user.setPassword(null);
         user.setIdNumber(null);
         return user;
     }

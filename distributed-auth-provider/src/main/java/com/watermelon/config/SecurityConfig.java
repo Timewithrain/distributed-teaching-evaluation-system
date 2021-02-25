@@ -36,15 +36,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        security.csrf()
-                .disable()
+                //禁用csrf功能
+        security.csrf().disable()
+                //限定请求
                 .authorizeRequests()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .formLogin()
-                .and()
-                .logout();
+                //手动添加被限制的请求路径
+                .antMatchers("/admin/**").hasRole("user:admin")
+                .antMatchers("/teacher/**").hasRole("user:teacher")
+                .antMatchers("/supervisor/**").hasRole("user:supervisor")
+                .antMatchers("/user/login").permitAll()
+                .antMatchers("/oauth/**").permitAll()
+                .anyRequest().permitAll()
+                //对于没有配置权限的其他请求允许匿名访问
+                .and().anonymous()
+                //使用默认登录和退出页面
+                .and().formLogin()
+                .and().logout();
     }
 
     /**

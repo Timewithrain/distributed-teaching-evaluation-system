@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,6 @@ public class Role {
      */
     private int id;
     private String name;
-    private ArrayList<Permission> permissions = new ArrayList<>();
+    private List<Permission> permissions = new ArrayList<>();
 
 }

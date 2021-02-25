@@ -3,19 +3,27 @@ package com.watermelon.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.Arrays;
 
 /**
- * AuthorizationServer认证服务器的基本配置
+ * AuthorizationServer认证服务器的高级配置
  */
 @Configuration
 @EnableAuthorizationServer
@@ -33,10 +41,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtAccessTokenConverter tokenConverter;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     /**
      * 配置客户端详情服务
-     * 客户端详细信息在这里进行初始化，你能够把客户端详情信息写死在这里或者是通过数据库来存储调取详情信息
-     * @param configurer
+     * <p>客户端详细信息在这里进行初始化，可以把客户端详情信息写死在这里或者是通过数据库来存储调取详情信息
+     * <p>授权类型
+     * <p>授权码类型:authorization_code
+     * <p>隐式授权类型:implicit
+     * <p>密码类型:password
+     * <p>客户端凭据类型:client_credentials
+     * @param configurer ClientDetailsServiceConfigurer
      * @throws Exception
      */
     @Override
@@ -58,29 +77,48 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
-     * 配置令牌端点(Token Endpoint)的安全约束(待完善)
-     * 目前未对token进行验证
-     * 应改为checkTokenAccess("isAuthenticated")
+     * 配置令牌端点(Token Endpoint)的安全约束
      * @param securityConfigurer
-     * @version 1.0
+     * @version 2.0
      */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer securityConfigurer){
         //配置token获取和验证时的策略
-        securityConfigurer.tokenKeyAccess("permitAll()")//oauth/token_key
-                  .checkTokenAccess("permitAll()")//oauth/check_token
+        securityConfigurer.tokenKeyAccess("permitAll()")//开启/oauth/token_key接口无权限访问
+                  .checkTokenAccess("isAuthenticated()")//开启/oauth/check_token接口认证后访问
                   .allowFormAuthenticationForClients();
     }
 
+    /**
+     * 配置授权(authorization)以及令牌(token)的访问端点和令牌服务(token services)
+     * @param endpointsConfigurer AuthorizationServerEndpointsConfigurer
+     */
+    public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer){
+        endpointsConfigurer.authenticationManager(authenticationManager)
+                .authorizationCodeServices((new InMemoryAuthorizationCodeServices()))
+                .tokenServices(authorizationServerTokenServices())
+                .userDetailsService(userDetailsService)
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
+    }
+
+    /**
+     * 配置token服务的存储及token类型等信息
+     * @return services DefaultTokenServices
+     */
     @Bean
     public AuthorizationServerTokenServices authorizationServerTokenServices(){
         DefaultTokenServices services = new DefaultTokenServices();
         services.setClientDetailsService(clientDetailsService);
         services.setSupportRefreshToken(true);
 
+        //设置token的存储方式及其过期时间和刷新时间
         services.setTokenStore(tokenStore);
         services.setAccessTokenValiditySeconds(300);
         services.setRefreshTokenValiditySeconds(300);
+
+        TokenEnhancerChain chain = new TokenEnhancerChain();
+        chain.setTokenEnhancers(Arrays.asList(tokenConverter));
+        services.setTokenEnhancer(chain);
         return services;
     }
 

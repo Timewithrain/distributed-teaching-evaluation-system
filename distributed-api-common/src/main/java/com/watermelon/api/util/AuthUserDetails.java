@@ -1,10 +1,13 @@
 package com.watermelon.api.util;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.watermelon.api.entity.Permission;
+import com.watermelon.api.entity.Role;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,41 +18,52 @@ public class AuthUserDetails implements UserDetails {
 
     private String password;
 
-    private List<Permission> perms;
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (Collection<? extends GrantedAuthority>) perms;
+        //将用户的角色权限转化为Spring-Security可识别的权限集合并返回
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        List<Permission> permissions = role.getPermissions();
+        for (Permission permission : permissions){
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_"+permission.getPerms());
+            grantedAuthorities.add(grantedAuthority);
+        }
+        return grantedAuthorities;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
+    }
+
+    public List<Permission> getPermissions(){
+        return role.getPermissions();
     }
 
 }

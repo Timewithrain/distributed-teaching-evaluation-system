@@ -37,7 +37,7 @@ public class AccessFilter extends ZuulFilter {
             context.setSendZuulResponse(true); // 对该请求进行路由
             return null;
         }
-        context.setSendZuulResponse(false); // 不对其进行路由
+        context.setSendZuulResponse(false); // 不对其进行路由转发
         return null;
     }
 }
