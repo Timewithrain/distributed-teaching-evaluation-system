@@ -4,6 +4,17 @@ server:
 spring:
   application:
     name: distribute-auth-server
+  redis:
+    host: 175.24.40.52
+    port: 6379
+    database: 2
+    password:
+    timeout: 3000
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
 
 eureka:
   client:

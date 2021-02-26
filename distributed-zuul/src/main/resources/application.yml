@@ -38,3 +38,14 @@ zuul:
 #  #忽略服务名，限制通过服务名直接获取后台服务，保护服务
 #  ignored-services: distribute-user-manage-provider
 
+
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:9004/auth/oauth/token
+      user-authorization-uri: http://localhost:9004/auth/oauth/authorize
+      client-id: web
+    resource:
+      user-info-uri:  http://localhost:9004/auth/api/member
+      prefer-token-info: false
+

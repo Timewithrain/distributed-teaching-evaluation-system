@@ -3,6 +3,7 @@ package com.watermelon.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,11 +20,12 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import java.util.Arrays;
 
 /**
- * AuthorizationServer认证服务器的高级配置
+ * 配置AuthorizationServer认证服务器
  */
 @Configuration
 @EnableAuthorizationServer
@@ -46,6 +48,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+
+    @Bean
+    public JwtAccessTokenConverter tokenConverter(){
+        JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
+        tokenConverter.setSigningKey("jwt_key");
+        return tokenConverter;
+    }
+
+    /**
+     * 将token保存在内存中
+     * @return RedisTokenStore
+     * @version 2.0
+     */
+    @Bean
+    public TokenStore tokenStore(){
+        return new RedisTokenStore(redisConnectionFactory);
+//        return new JwtTokenStore(tokenConverter());
+    }
 
     /**
      * 配置客户端详情服务
@@ -95,9 +118,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer){
         endpointsConfigurer.authenticationManager(authenticationManager)
-                .authorizationCodeServices((new InMemoryAuthorizationCodeServices()))
-                .tokenServices(authorizationServerTokenServices())
                 .userDetailsService(userDetailsService)
+//                .authorizationCodeServices((new InMemoryAuthorizationCodeServices()))
+                .tokenServices(authorizationServerTokenServices())
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
     }
 
@@ -116,9 +139,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         services.setAccessTokenValiditySeconds(300);
         services.setRefreshTokenValiditySeconds(300);
 
-        TokenEnhancerChain chain = new TokenEnhancerChain();
-        chain.setTokenEnhancers(Arrays.asList(tokenConverter));
-        services.setTokenEnhancer(chain);
+        //Jwt方式存储token取消注释
+//        TokenEnhancerChain chain = new TokenEnhancerChain();
+//        chain.setTokenEnhancers(Arrays.asList(tokenConverter));
+//        services.setTokenEnhancer(chain);
         return services;
     }
 
