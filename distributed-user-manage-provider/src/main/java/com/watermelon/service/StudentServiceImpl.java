@@ -118,7 +118,7 @@ public class StudentServiceImpl implements StudentService {
      * @param s Student
      * @return s Student
      */
-    private Student addRoleFieldOfStudent(Student s){
+    public Student addRoleFieldOfStudent(Student s){
         User u = userMapper.getUserById(s.getId());
         if (u!=null){
             s.addUserInfo(u);
@@ -135,7 +135,7 @@ public class StudentServiceImpl implements StudentService {
      * @param s Student
      * @return s Student
      */
-    private Student addCourseListFieldOfStudent(Student s){
+    public Student addCourseListFieldOfStudent(Student s){
         //通过courseMapper根据学生的班级号获取课程，并添加进学生的courseList属性
         Class aClass = s.getAClass();
         if (aClass!=null){
