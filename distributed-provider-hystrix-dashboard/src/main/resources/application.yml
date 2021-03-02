@@ -1,0 +1,15 @@
+server:
+  port: 9005
+
+spring:
+  application:
+    name: distribute-hystrix-dashboard
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
+    instance:
+      instance-id: distribute-hystrix-dashboard
+      prefer-ip-address: true

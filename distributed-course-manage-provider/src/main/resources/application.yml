@@ -34,6 +34,12 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     connectionProperties: druid.stat.mergeSql=true
 
+#向hystrix-dashboard监控服务提供监控端口
+management:
+   endpoints:
+     web:
+       exposure:
+         include: health,info,hystrix.stream
 
 #设置向Eureka进行服务注册
 eureka:
