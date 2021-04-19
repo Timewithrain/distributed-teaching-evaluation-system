@@ -19,6 +19,8 @@
         <module>distributed-zuul</module>
         <module>distributed-evaluation-manage-provider</module>
         <module>distributed-auth-provider</module>
+        <module>distributed-provider-hystrix-dashboard</module>
+        <module>distributed-provider-admin-dashboard</module>
     </modules>
 
     <properties>
@@ -32,7 +34,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR6</version>
+                <version>Hoxton.SR1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

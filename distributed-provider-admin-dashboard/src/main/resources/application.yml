@@ -1,0 +1,20 @@
+server:
+  port: 9005
+
+spring:
+  application:
+    name: distribute-admin-dashboard
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost02:9002/eureka/,http://localhost01:9001/eureka/
+    instance:
+      instance-id: distribute-admin-dashboard
+      prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
