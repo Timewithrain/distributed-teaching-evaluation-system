@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Department;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,11 +18,25 @@ public interface DepartmentMapper {
 
     void addDepartment(Department department);
 
-    List<Department> listDepartment(Page<Department> page);
+    IPage<Department> listDepartment(Page<Department> page);
+
+    List<Department> listDepartment();
+
+    IPage<Department> searchDepartment(Page<Department> page,String str);
 
     void updateDepartment(Department department);
 
     void deleteDepartment(int id);
 
     int getMaxDepartmentId();
+
+    int getDepartmentNumber();
+
+    int getClassNumberByDepartmentId(int departmentId);
+
+    int getCourseNumberByDepartmentId(int departmentId);
+
+    int getTeacherNumberByDepartmentId(int departmentId);
+
+    int getStudentNumberByDepartmentId(int departmentId);
 }

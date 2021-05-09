@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -23,11 +25,13 @@ public class UserController {
     @PostMapping("/login")
     public Object login(@RequestBody User user, HttpServletRequest request){
         HttpSession session = request.getSession();
-        User u = userService.getUserByName(user.getName());
-        if (u!=null&&u.getPassword().equals(user.getPassword())){
-            session.setAttribute("id",user.getId());
-            session.setAttribute("username",user.getName());
-            return ResultUtil.success();
+        //调用login方法进行登录验证，若返回值为空则登陆失败
+        User u = userService.login(user);
+        if (u!=null){
+            session.setAttribute("id",u.getId());
+            session.setAttribute("username",u.getName());
+            u.setPassword(null);
+            return ResultUtil.success(u);
         }else {
             //登陆失败
             return ResultUtil.error(StatusCode.LOGIN_FAIL);
@@ -49,7 +53,7 @@ public class UserController {
         String username = query.getUsername();
         String newpwd = query.getNewpwd();
         String comfirmpwd = query.getComfirmpwd();
-        User u = userService.getUserByName(username);
+        User u = userService.getUserByName(username).get(0);
         Map<String,String> map = new HashMap<>();
         if(idnumber.equals(u.getIdNumber())&&newpwd.equals(comfirmpwd)){
             u.setPassword(newpwd);
@@ -79,7 +83,7 @@ public class UserController {
         String username = query.getUsername();
         String newpwd = query.getNewpwd();
         String comfirmpwd = query.getComfirmpwd();
-        User u = userService.getUserByName(username);
+        User u = userService.getUserByName(username).get(0);
         Map<String,String> map = new HashMap<>();
         if(oldpwd.equals(u.getPassword())&&newpwd.equals(comfirmpwd)){
             u.setPassword(newpwd);
@@ -104,7 +108,7 @@ public class UserController {
 
     @GetMapping("/getUserByName")
     public User getUserByName(String name){
-        return userService.getUserByName(name);
+        return userService.getUserByName(name).get(0);
     }
 
     @GetMapping("/getUserDetailsByName")

@@ -1,11 +1,17 @@
 package com.watermelon.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.watermelon.api.entity.Course;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +37,11 @@ public class RemoteCourseService {
      */
     @HystrixCommand(fallbackMethod = "listCourseByClassIdFallback")
     List<Course> listCourseByClassId(int id){
-        return restTemplate.getForObject(DEPENDENCY_URL+"/listAllCourseByClassId?classId="+id,List.class);
+        String url = DEPENDENCY_URL+"/listAllCourseByClassIdForRemote?classId="+id;
+        ParameterizedTypeReference<ArrayList<Course>> typeRef = new ParameterizedTypeReference<ArrayList<Course>>() {};
+        ResponseEntity<ArrayList<Course>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, typeRef);
+        List<Course> list = responseEntity.getBody();
+        return list;
     }
 
     /**

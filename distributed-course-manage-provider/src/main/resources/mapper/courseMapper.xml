@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.watermelon.mapper.CourseMapper">
-    <select id="getCourseById" parameterType="int" resultType="Course">
+    <select id="getCourseById" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -32,7 +32,7 @@
             c.course_id=#{id}
     </select>
 
-    <select id="getCourseByName" parameterType="String" resultType="Course">
+    <select id="getCourseByName" parameterType="String" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -60,8 +60,9 @@
             c.name = #{name}
     </select>
 
-    <select id="listCourse" resultType="Course">
-        select c.course_id as id,
+    <select id="listCourse" resultType="com.watermelon.api.entity.Course">
+        select distinct
+               c.course_id as id,
                c.name,
                c.number,
                c.course_type as courseType,
@@ -79,7 +80,8 @@
                t.grant_date as "teacher.grantDate",
                t.political_status as "teacher.politicalStatus",
                t.degree as "teacher.degree",
-               t.graduate_school as "teacher.graduateSchool"
+               t.graduate_school as "teacher.graduateSchool",
+               cc.class_id as "classId"
         from class_course as cc,
              course as c,
              teacher as t
@@ -87,7 +89,7 @@
             cc.course_id=c.course_id
     </select>
 
-    <select id="listAllCourseByClassId" parameterType="int" resultType="Course">
+    <select id="listAllCourseByClassId" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -115,7 +117,23 @@
             cc.class_id=#{param1}
     </select>
 
-    <select id="listCourseByClassId" parameterType="int" resultType="Course">
+    <select id="listCourseByTeacherId" parameterType="int" resultType="com.watermelon.api.entity.Course">
+        select c.course_id as id,
+               c.name,
+               c.number,
+               c.course_type as courseType,
+               c.course_class as courseClass,
+               c.course_dep as courseDep,
+               c.score,
+               c.time,
+               cc.class_id as "classId"
+        from class_course as cc,
+             course as c
+        where cc.course_id=c.course_id
+          and cc.teacher_id=#{param2}
+    </select>
+
+    <select id="listCourseByClassId" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -143,7 +161,7 @@
             cc.class_id=#{param2}
     </select>
 
-    <select id="listCourseByDepartmentId" parameterType="int" resultType="Course">
+    <select id="listCourseByDepartmentId" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -171,7 +189,7 @@
             c.department_id=#{param2}
     </select>
 
-    <select id="listCourseWithoutTeacher" resultType="Course">
+    <select id="listCourseWithoutTeacher" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -183,7 +201,7 @@
         from course as c
     </select>
 
-    <select id="searchCourse" parameterType="String" resultType="Course">
+    <select id="searchCourse" parameterType="String" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -211,13 +229,82 @@
             c.name like '%${param2}%'
     </select>
 
-    <insert id="addCourse" parameterType="Course">
-        insert into course (course_id, number, name, course_type, course_class, course_dep, score, time)
-        values(#{id},#{number},#{name},#{courseType},#{courseClass},#{courseDep},#{score},#{time});
+    <select id="searchCourseBySupervisorId" parameterType="String" resultType="com.watermelon.api.entity.Course">
+        select distinct
+               c.course_id as id,
+               c.name,
+               c.number,
+               c.course_type as courseType,
+               c.course_class as courseClass,
+               c.course_dep as courseDep,
+               c.score,
+               c.time,
+               t.teacher_id as "teacher.id",
+               t.name as "teacher.name",
+               t.birth as "teacher.birth",
+               t.region as "teacher.region",
+               t.total_class as "teacher.totalClass",
+               t.entrance_date as "teacher.entranceDate",
+               t.job_title as "teacher.jobTitle",
+               t.grant_date as "teacher.grantDate",
+               t.political_status as "teacher.politicalStatus",
+               t.degree as "teacher.degree",
+               t.graduate_school as "teacher.graduateSchool",
+               cc.class_id as "classId"
+        from (select class_id,course_id from supervisor_course where supervisor_id=#{param2}) as scc,
+             class_course as cc,
+             teacher as t,
+             course as c
+        where t.teacher_id=cc.teacher_id
+          and c.course_id=cc.course_id
+          and cc.class_id=scc.class_id
+          and cc.course_id=scc.course_id
+          and (c.name like '%${param4}%' or t.name like '%${param4}%')
+          and cc.class_id like '%${param3}%'
+    </select>
+
+    <!--  按条件查找课程(不包含教师)  -->
+    <select id="searchCourseWithoutTeacher" parameterType="String" resultType="com.watermelon.api.entity.Course">
+        select c.course_id as id,
+               c.name,
+               c.number,
+               c.course_type as courseType,
+               c.course_class as courseClass,
+               c.course_dep as courseDep,
+               c.score,
+               c.time
+        from course as c
+        where (c.name like '%${param2}%' or c.number like '%${param2}%')
+          and c.course_class like '%${param3}%'
+          and c.department_id like '%${param4}%'
+    </select>
+
+    <!--  查找对应班级中尚未被选中的课程  -->
+    <select id="searchCourseNotSelected" parameterType="String" resultType="com.watermelon.api.entity.Course">
+        select c.course_id as id,
+               c.name,
+               c.number,
+               c.course_type as courseType,
+               c.course_class as courseClass,
+               c.course_dep as courseDep,
+               c.score,
+               c.time
+        from course as c
+        where (c.name like '%${param2}%' or c.number like '%${param2}%'
+            or c.course_dep like '%${param2}%' or c.course_class like '%${param2}%')
+            and c.course_id not in
+            ( select distinct course_id from class_course where class_id=#{param3} )
+    </select>
+
+    <insert id="addCourse" parameterType="com.watermelon.api.entity.Course">
+        insert into course (course_id, number, name, course_type, course_class, course_dep, score, time, department_id)
+        values(#{id},#{number},#{name},#{courseType},#{courseClass},#{courseDep},#{score},#{time},
+               (select department_id from department where name=#{courseDep}));
     </insert>
 
-    <update id="updateCourse" parameterType="Course">
-        update course set number=#{number},name=#{name},course_type=#{courseType},course_class=#{courseClass},course_dep=#{courseDep},score=#{score},time=#{time}
+    <update id="updateCourse" parameterType="com.watermelon.api.entity.Course">
+        update course set number=#{number},name=#{name},course_type=#{courseType},course_class=#{courseClass},course_dep=#{courseDep},score=#{score},time=#{time},
+                          department_id=(select department_id from department where name=#{courseDep})
         where course_id=#{id}
     </update>
 
@@ -229,7 +316,18 @@
         delete from course where course_id = #{id}
     </delete>
 
+    <delete id="deleteCourseByDepartmentId" parameterType="int">
+        delete from class_course where course_id
+        in (select course_id from course where department_id=#{departmentId});
+        delete from course where department_id=#{departmentId};
+    </delete>
+
     <select id="getMaxCourseId" resultType="int">
         select max(course_id) from course
     </select>
+
+    <select id="getCourseNumber" resultType="int">
+        select count(*) from course
+    </select>
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.watermelon.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.*;
 import com.watermelon.api.service.RoleService;
@@ -35,6 +36,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SupervisorMapper supervisorMapper;
 
+    public User login(User user) {
+        User userByIdNumber = getUserByIdNumber(user.getIdNumber());
+        //通过idNumber进行匹配，若查询成功则返回用户
+        if (userByIdNumber!=null&&user.getPassword().equals(userByIdNumber.getPassword())) return userByIdNumber;
+        //通过用户名进行匹配，用户可能重名，循环匹配用户密码信息
+        List<User> userList = getUserByName(user.getName());
+        for (User u : userList) {
+            if (user.getPassword().equals(u.getPassword())) return u;
+        }
+        //用户名及IdNumber均匹配失败则登陆失败
+        return null;
+    }
+
     @Override
     public int registerUser(String username,String password){
         int count = userMapper.getMaxUserId();
@@ -50,20 +64,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(int id) {
         User user = userMapper.getUserById(id);
-        user.setRole(roleMapper.getRoleById(user.getRoleId()));
+        if (user!=null) {
+            user.setRole(roleMapper.getRoleById(user.getRoleId()));
+        }
+        return user;
+    }
+
+    public User getUserByIdNumber(String idNumber) {
+        User user = userMapper.getUserByIdNumber(idNumber);
+        if (user!=null) {
+            user.setRole(roleMapper.getRoleById(user.getRoleId()));
+        }
         return user;
     }
 
     @Override
-    public User getUserByName(String name) {
-        User user = userMapper.getUserByName(name);
-        user.setRole(roleMapper.getRoleById(user.getRoleId()));
-        return user;
+    public List<User> getUserByName(String name) {
+        List<User> userList = userMapper.getUserByName(name);
+        for (User u : userList) {
+            if (u!=null){
+                u.setRole(roleMapper.getRoleById(u.getRoleId()));
+            }
+        }
+        return userList;
     }
 
     @Override
     public User getUserDetailsByName(String name) {
-        User user = userMapper.getUserByName(name);
+        List<User> userList = userMapper.getUserByName(name);
+        User user = userList.get(0);
         user.setRole(roleService.getRoleById(user.getRoleId()));
         user.setIdNumber(null);
         return user;
@@ -124,13 +153,33 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
+    @Override
+    public IPage<User> searchUser(int startPage, int pageSize, String str) {
+        Page<User> page = new Page<>(startPage,pageSize);
+        IPage<User> list = userMapper.searchUser(page, str);
+        for (User user : list.getRecords()){
+            Role role = roleService.getRoleById(user.getRoleId());
+            user.setRole(role);
+        }
+        return list;
+    }
+
     /**
      * 获取用户id的最大值
      * @return id
      */
     @Override
     public int getMaxUserId() {
-        return getMaxUserId();
+        return userMapper.getMaxUserId();
+    }
+
+    /**
+     * 获取用户的总数
+     * @return number
+     */
+    @Override
+    public int getUserNumber() {
+        return userMapper.getUserNumber();
     }
 
     /**

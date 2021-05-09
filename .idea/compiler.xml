@@ -2,16 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="distributed-zuul" />
+        <module name="distributed-provider-admin-dashboard" />
         <module name="distributed-course-manage-consumer" />
         <module name="distributed-user-manage-consumer" />
         <module name="distributed-auth-provider" />
-        <module name="distributed-api-common" />
         <module name="distributed-user-manage-provider" />
+        <module name="distributed-api-common" />
         <module name="distributed-eureka-02" />
         <module name="distributed-eureka-01" />
         <module name="distributed-provider-hystrix-dashboard" />

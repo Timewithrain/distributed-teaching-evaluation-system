@@ -15,7 +15,7 @@ spring:
     name: distribute-course-manage-provider
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/evaluation?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/evaluation?serverTimezone=UTC&allowMultiQueries=true
     username: root
     password: 105036
     type: com.alibaba.druid.pool.DruidDataSource
@@ -34,12 +34,19 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     connectionProperties: druid.stat.mergeSql=true
 
-#向hystrix-dashboard监控服务提供监控端口
+  #向admin-dashboard监控服务发送监控消息
+  boot:
+    admin:
+      client:
+        url: http://localhost:9005
+
+#向dashboard监控服务提供监控端口
 management:
    endpoints:
      web:
        exposure:
-         include: health,info,hystrix.stream
+         #include: health,info,hystrix.stream
+         include: "*"
 
 #设置向Eureka进行服务注册
 eureka:

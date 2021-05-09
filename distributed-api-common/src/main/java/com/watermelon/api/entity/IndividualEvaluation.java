@@ -15,13 +15,13 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class IndividualEvaluation{
 
-    @Null
+//    @Null
     private Integer individualId;
 
-    @Null
+    @NotNull
     private Integer roleId;
 
-    @Null
+    @NotNull
     private Integer fromId;
 
     @NotNull
@@ -30,31 +30,31 @@ public class IndividualEvaluation{
     @NotNull
     private Integer courseId;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score1;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score2;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score3;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score4;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score5;
 
-    @Min(value=2)
-    @Max(value=5)
+//    @Min(value=2)
+//    @Max(value=5)
     private Integer score6;
 
-    @Null
+//    @Null
     private Double totalScore;
 
     private String advice;

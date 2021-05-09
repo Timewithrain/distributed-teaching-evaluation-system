@@ -3,23 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.UserMapper">
-    <select id="listUser" resultType="User">
+    <select id="listUser" resultType="com.watermelon.api.entity.User">
         select user_id as id, role_id, name, password, id_number from user
     </select>
 
-    <select id="getUserById" resultType="User">
+    <select id="searchUser" resultType="com.watermelon.api.entity.User">
+        select user_id as id, role_id, name, password, id_number from user where name like '%${param2}%' or id_number like '%${param2}%'
+    </select>
+
+    <select id="getUserById" resultType="com.watermelon.api.entity.User">
         select user_id as id, role_id, name, password, id_number from user where user_id = #{id}
     </select>
 
-    <select id="getUserByName" parameterType="String" resultType="User">
+    <select id="getUserByName" parameterType="String" resultType="com.watermelon.api.entity.User">
         select user_id as id, role_id, name, password, id_number from user where name = #{name}
     </select>
 
-    <insert id="addUser" parameterType="User">
+    <select id="getUserByIdNumber" parameterType="String" resultType="com.watermelon.api.entity.User">
+        select user_id as id, role_id, name, password, id_number from user where id_number = #{idNumber}
+    </select>
+
+    <insert id="addUser" parameterType="com.watermelon.api.entity.User">
         insert into user (user_id,role_id,name,password,id_number) values(#{id},#{roleId},#{name},#{password},#{idNumber})
     </insert>
 
-    <update id="updateUser" parameterType="User">
+    <update id="updateUser" parameterType="com.watermelon.api.entity.User">
         update user set name=#{name},password=#{password},role_id=#{roleId},id_number=#{idNumber} where user_id = #{id}
     </update>
 

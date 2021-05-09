@@ -5,7 +5,6 @@ spring:
   application:
     name: distribute-hystrix-dashboard
 
-
 eureka:
   client:
     service-url:
@@ -13,3 +12,7 @@ eureka:
     instance:
       instance-id: distribute-hystrix-dashboard
       prefer-ip-address: true
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "localhost"

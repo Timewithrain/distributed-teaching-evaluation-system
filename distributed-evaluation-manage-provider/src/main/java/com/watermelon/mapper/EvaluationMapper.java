@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.IndividualEvaluation;
@@ -49,21 +50,10 @@ public interface EvaluationMapper {
      */
     IndividualEvaluation getStudentIndiEvaluation(int studentId, int teacherId, int courseId);
 
-    // 添加个人评价
     /**
-     * 添加学生的个人评价
+     * 添加个人评价
      */
-    int addStudentIndiEvaluation(IndividualEvaluation individualEvaluation);
-
-    /**
-     * 添加老师的个人评价
-     */
-    int addTeacherIndiEvaluation(IndividualEvaluation individualEvaluation);
-
-    /**
-     * 添加督导的个人评价
-     */
-    int addSuperIndiEvaluation(IndividualEvaluation individualEvaluation);
+    int addIndividualEvaluation(IndividualEvaluation individualEvaluation);
 
     //获取教师总评价
     List<Map> getSummaryEvaluation(int teacherId,int courseId);
@@ -79,4 +69,9 @@ public interface EvaluationMapper {
 
     //查看是否已经评价
     Integer ifEvaluated(Integer fromId, Integer teacherId, Integer courseId);
+
+    List<IndividualEvaluation> listEvaluationByClassIdAndCourseIdAndRoleId(Integer classId, Integer courseId, Integer roleId);
+
+    IPage<IndividualEvaluation> listEvaluationByClassIdAndCourseIdAndRoleId(Page<IndividualEvaluation> page, Integer classId, Integer courseId, Integer roleId);
+
 }

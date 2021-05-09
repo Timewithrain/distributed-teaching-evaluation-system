@@ -1,6 +1,8 @@
 package com.watermelon.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.EvaluationItem;
 import com.watermelon.api.service.EvaluationItemService;
 import com.watermelon.mapper.EvaluationItemMapper;
@@ -16,8 +18,14 @@ public class EvaluationItemServiceImpl implements EvaluationItemService {
     private EvaluationItemMapper evaluationItemMapper;
 
     @Override
-    public List<EvaluationItem> findList(int rid) {
-        return evaluationItemMapper.getEvaluationsByRoleId(rid);
+    public List<EvaluationItem> listEvaluationByRoleId(int roleId) {
+        return evaluationItemMapper.listEvaluationByRoleId(roleId);
+    }
+
+    @Override
+    public IPage<EvaluationItem> searchEvaluationByRoleId(int startPage, int pageSize, String roleId, String str) {
+        Page<EvaluationItem> page = new Page<>(startPage, pageSize);
+        return evaluationItemMapper.searchEvaluationItem(page, roleId,str);
     }
 
     @Override
@@ -33,11 +41,6 @@ public class EvaluationItemServiceImpl implements EvaluationItemService {
     @Override
     public int deleteEvaluationItem(int id) {
         return evaluationItemMapper.deleteEvaluationItem(id);
-    }
-
-    @Override
-    public JSONObject findLists() {
-        return null;
     }
 
 }

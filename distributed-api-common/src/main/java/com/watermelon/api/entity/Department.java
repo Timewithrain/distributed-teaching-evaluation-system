@@ -11,5 +11,9 @@ public class Department {
 
     private int id;
     private String name;
+    private int courseNumber;
+    private int classNumber;
+    private int teacherNumber;
+    private int studentNumber;
 
 }

@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Class;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,7 +16,13 @@ public interface ClassMapper {
 
     Class getClassByName(String name);
 
-    List<Class> listClass(Page<Class> page);
+    IPage<Class> listClass(Page<Class> page);
+
+    List<Class> listClassByDepartmentId(int departmentId);
+
+    IPage<Class> searchClass(Page<Class> page, String str, String grade, String departmentId);
+
+    List<String> listGrade();
 
     int addClass(Class aClass);
 
@@ -31,4 +38,5 @@ public interface ClassMapper {
 
     int getMaxClassId();
 
+    int getClassNumber();
 }

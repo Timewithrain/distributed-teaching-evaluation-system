@@ -1,7 +1,9 @@
 package com.watermelon.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Department;
 import com.watermelon.api.service.DepartmentService;
+import com.watermelon.api.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
@@ -16,35 +19,44 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @PostMapping("/addDepartment")
-    public Map<String, String> addDepartment(@RequestBody(required=false) Department department){
+    public ResultUtil addDepartment(@RequestBody(required=false) Department department){
         departmentService.addDepartment(department);
-        Map<String,String> map = new HashMap<>();
-        map.put("status","200");
-        map.put("massage","add department succeed");
-        return map;
+        return ResultUtil.success(null,"add department succeed");
     }
 
     @PutMapping("/updateDepartment")
-    public Map<String, String> updateDepartment(@RequestBody(required=false) Department department){
+    public ResultUtil updateDepartment(@RequestBody(required=false) Department department){
         departmentService.updateDepartment(department);
-        Map<String,String> map = new HashMap<>();
-        map.put("status","200");
-        map.put("massage","update department succeed");
-        return map;
+        return ResultUtil.success(null,"update department succeed");
     }
 
-    @DeleteMapping("/deleteDepartment/{id}")
-    public Map<String, String> deleteDepartment(@RequestParam(value="id",required=false) int id){
+    @DeleteMapping("/deleteDepartment")
+    public ResultUtil deleteDepartment(@RequestParam(value="id",required=false) int id){
         departmentService.deleteDepartment(id);
-        Map<String,String> map = new HashMap<>();
-        map.put("status","200");
-        map.put("massage","delete department succeed");
-        return map;
+        return ResultUtil.success(null,"delete department succeed");
     }
 
     @GetMapping("/listDepartment")
-    public List<Department> listDepartment(int startPage, int pageSize){
-        List<Department> list = departmentService.listDepartment(startPage, pageSize);
-        return list;
+    public ResultUtil listDepartment(int startPage, int pageSize){
+        IPage<Department> page = departmentService.listDepartment(startPage, pageSize);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",page.getRecords());
+        map.put("total",page.getTotal());
+        return ResultUtil.success(map);
+    }
+
+    @GetMapping("/listAllDepartment")
+    public ResultUtil listAllDepartment(){
+        List<Department> list = departmentService.listAllDepartment();
+        return ResultUtil.success(list);
+    }
+
+    @GetMapping("/searchDepartment")
+    public ResultUtil searchDepartment(int startPage, int pageSize, String str){
+        IPage<Department> page = departmentService.searchDepartment(startPage, pageSize, str);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",page.getRecords());
+        map.put("total",page.getTotal());
+        return ResultUtil.success(map);
     }
 }

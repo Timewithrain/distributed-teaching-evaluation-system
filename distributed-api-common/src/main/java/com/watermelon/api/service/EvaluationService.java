@@ -3,6 +3,7 @@ package com.watermelon.api.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.IndividualEvaluation;
+import com.watermelon.api.entity.SummaryEvaluation;
 
 import java.util.List;
 import java.util.Map;
@@ -64,22 +65,11 @@ public interface EvaluationService {
     IndividualEvaluation getStudentIndiEvaluation(int studentId, int teacherId, int courseId);
 
     /**
-     * 添加学生的个人评价
+     * 添加个人评价
      */
-    int addStudentIndiEvaluation(IndividualEvaluation individualEvaluation);
+    int addIndividualEvaluation(IndividualEvaluation individualEvaluation);
 
-    /**
-     * 添加老师的个人评价
-     */
-    int addTeacherIndiEvaluation(IndividualEvaluation individualEvaluation);
-
-    /**
-     * 添加督导的个人评价
-     */
-    int addSuperIndiEvaluation(IndividualEvaluation individualEvaluation);
-
-    //获取老师总评价
-    List<Map> getSummaryEvaluation(int teacherId,int courseId);
+    List<Map> listIndividualEvaluation(int teacherId,int courseId);
 
     //获取某教师的所有课程
     IPage<Course> getCoursesOfTeacher(int teacherId,int startPage,int pageSize);
@@ -89,4 +79,13 @@ public interface EvaluationService {
 
     //查看某老师是否已经评价了某门课程
     Integer ifEvaluated(Integer fromId, Integer teacherId, Integer courseId);
+
+    IPage<SummaryEvaluation> listSummaryEvaluation(int startPage, int pageSize);
+
+    IPage<SummaryEvaluation> listSummaryEvaluationByTeacherId(int startPage, int pageSize, int teacherId);
+
+    IPage<SummaryEvaluation> listSummaryEvaluationByClassId(int startPage, int pageSize, int classId);
+
+    IPage<SummaryEvaluation> listSummaryEvaluationBySupervisorId(int startPage, int pageSize, int supervisorId);
+
 }

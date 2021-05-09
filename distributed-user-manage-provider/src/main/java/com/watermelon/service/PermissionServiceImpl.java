@@ -26,6 +26,11 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public List<Permission> listPermission() {
+        return permissionMapper.listPermission();
+    }
+
+    @Override
     public List<Permission> listPermission(int startPage, int pageSize) {
         Page<Permission> page = new Page<>(startPage,pageSize);
         return permissionMapper.listPermission(page);
@@ -57,5 +62,10 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public int getMaxPermissionId() {
         return permissionMapper.getMaxPermissionId();
+    }
+
+    @Override
+    public int getPermissionNumber() {
+        return permissionMapper.getPermissionNumber();
     }
 }

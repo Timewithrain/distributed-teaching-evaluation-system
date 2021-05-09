@@ -7,7 +7,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)  //非空才会序列化
 @Data
 public class ResultUtil {
-    private Integer code;
+    private Integer status;
     private String msg;
     private Object data;
     private Object info;
@@ -16,18 +16,29 @@ public class ResultUtil {
      */
     public static ResultUtil success() {
         ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(StatusCode.OK.getValue());
+        resultUtil.setStatus(StatusCode.OK.getValue());
         resultUtil.setMsg(StatusCode.OK.getText());
         return resultUtil;
     }
 
     /**
-     * 返回一个返回码为200的成功消息的
+     * 返回一个返回码为200的成功消息
      */
     public static ResultUtil success(Object data) {
         ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(StatusCode.OK.getValue());
+        resultUtil.setStatus(StatusCode.OK.getValue());
         resultUtil.setMsg(StatusCode.OK.getText());
+        resultUtil.setData(data);
+        return resultUtil;
+    }
+
+    /**
+     * 请求成功并返回数据以及特定的消息
+     */
+    public static ResultUtil success(Object data,String message) {
+        ResultUtil resultUtil = new ResultUtil();
+        resultUtil.setStatus(StatusCode.OK.getValue());
+        resultUtil.setMsg(message);
         resultUtil.setData(data);
         return resultUtil;
     }
@@ -37,14 +48,14 @@ public class ResultUtil {
      */
     public static ResultUtil error(StatusCode errorEnum) {
         ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(errorEnum.getValue());
+        resultUtil.setStatus(errorEnum.getValue());
         resultUtil.setMsg(errorEnum.getText());
         return resultUtil;
     }
 
     public static ResultUtil error(StatusCode errorEnum,Object info) {
         ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(errorEnum.getValue());
+        resultUtil.setStatus(errorEnum.getValue());
         resultUtil.setMsg(errorEnum.getText());
         resultUtil.setInfo(info);
         return resultUtil;

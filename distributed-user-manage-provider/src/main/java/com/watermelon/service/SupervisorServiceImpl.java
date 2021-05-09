@@ -1,5 +1,6 @@
 package com.watermelon.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.*;
 import com.watermelon.api.service.RoleService;
@@ -23,19 +24,30 @@ public class SupervisorServiceImpl implements SupervisorService {
     @Autowired
     private SupervisorMapper supervisorMapper;
 
+    @Autowired
+    private RemoteCourseService remoteCourseService;
+
     @Override
     public List<Supervisor> getAllSupervisor() {
         return supervisorMapper.getAllSupervisor();
     }
 
     @Override
-    public int addSupervisorCourse(int supervisorId, int courseId, int teacherId) {
-        return supervisorMapper.addSupervisorCourse(supervisorId,courseId,teacherId);
+    public int addSupervisorCourse(int supervisorId, int courseId, int classId) {
+        return supervisorMapper.addSupervisorCourse(supervisorId,courseId,classId);
     }
 
     @Override
-    public int deleteSupervisorCourse(int supervisorId, int courseId, int teacherId) {
-        return supervisorMapper.deleteSupervisorCourse(supervisorId,courseId,teacherId);
+    public void addSupervisorClass(int supervisorId, int classId) {
+        List<Course> list = remoteCourseService.listCourseByClassId(classId);
+        for (Course c : list) {
+            supervisorMapper.addSupervisorCourse(supervisorId,c.getId(),classId);
+        }
+    }
+
+    @Override
+    public int deleteSupervisorCourse(int supervisorId, int courseId, int classId) {
+        return supervisorMapper.deleteSupervisorCourse(supervisorId,courseId,classId);
     }
 
 
@@ -76,10 +88,10 @@ public class SupervisorServiceImpl implements SupervisorService {
     }
 
     @Override
-    public List<Supervisor> listSupervisor(int startPage, int pageSize) {
+    public IPage<Supervisor> searchSupervisor(int startPage, int pageSize, String str) {
         Page<Supervisor> page = new Page<>(startPage,pageSize);
-        List<Supervisor> list = supervisorMapper.listSupervisor(page);
-        for (Supervisor s : list){
+        IPage<Supervisor> listPage = supervisorMapper.searchSupervisor(page, str);
+        for (Supervisor s : listPage.getRecords()){
             User u = userMapper.getUserById(s.getId());
             if (u!=null){
                 s.addUserInfo(u);
@@ -89,7 +101,7 @@ public class SupervisorServiceImpl implements SupervisorService {
                 }
             }
         }
-        return list;
+        return listPage;
     }
 
     /**
@@ -100,7 +112,7 @@ public class SupervisorServiceImpl implements SupervisorService {
      * @return List<Course> 课程列表
      */
     @Override
-    public List<Course> listCourseBySupervisorId(int startPage, int pageSize, int id) {
+    public IPage<Course> listCourseBySupervisorId(int startPage, int pageSize, int id) {
         Page<Course> page = new Page<>(startPage,pageSize);
         return supervisorMapper.listCourseBySupervisorId(page,id);
     }

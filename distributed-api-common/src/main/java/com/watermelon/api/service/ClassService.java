@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Class;
 
 import java.util.List;
@@ -10,13 +11,19 @@ public interface ClassService {
 
     Class getClassByName(String name);
 
-    List<Class> listClassWithNoCourse(int startPage, int pageSize);
+    IPage<Class> listClassWithNoCourse(int startPage, int pageSize);
 
-    List<Class> listClass(int startPage, int pageSize);
+    IPage<Class> listClass(int startPage, int pageSize);
 
-    int addClass(Class classe);
+    IPage<Class> searchClass(int startPage, int pageSize, String str, String grade, String departmentId);
 
-    void updateClass(Class classe);
+    List<Class> listClassByDepartmentId(int departmentId);
+
+    List<String> listGrade();
+
+    int addClass(Class aClass);
+
+    void updateClass(Class aClass);
 
     void deleteClass(int id);
 
@@ -25,4 +32,6 @@ public interface ClassService {
     void deleteClassCourse(int classId,int courseId);
 
     int getMaxClass();
+
+    int getClassNumber();
 }

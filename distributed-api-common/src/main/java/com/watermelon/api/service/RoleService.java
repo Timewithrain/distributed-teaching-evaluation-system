@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Role;
 import com.watermelon.api.entity.Permission;
 
@@ -15,7 +16,9 @@ public interface RoleService {
 
     List<Permission> getRolesPermissions(int id);
 
-    List<Role> listRole(int startPage, int pageSize);
+    IPage<Role> listRole(int startPage, int pageSize);
+
+    List<Role> listRole();
 
     void addRole(Role role);
 
@@ -25,7 +28,11 @@ public interface RoleService {
 
     void addRolePermission(int roleId,int permsId);
 
+    void updateRolePermissions(int roleId,String perms);
+
     void deleteRolePermission(int roleId,int permsId);
+
+    int getRoleNumber();
 
     int getMaxRoleId();
 }

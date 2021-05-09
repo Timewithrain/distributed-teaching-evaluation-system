@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
@@ -23,27 +24,27 @@ public interface SupervisorMapper {
 
     int getMaxSupervisorId();
 
-    List<Supervisor> listSupervisor(Page<Supervisor> page);
+    IPage<Supervisor> searchSupervisor(Page<Supervisor> page, String str);
 
-    List<Course> listCourseBySupervisorId(Page<Course> page,int id);
+    IPage<Course> listCourseBySupervisorId(Page<Course> page,int id);
 
     /**
      * 添加督导可评价的课程老师
      * @param supervisorId
      * @param courseId
-     * @param teacherId
+     * @param classId
      * @return
      */
-    int addSupervisorCourse(int supervisorId, int courseId, int teacherId);
+    int addSupervisorCourse(int supervisorId, int courseId, int classId);
 
     /**
      * 删除督导可评价的课程老师
      * @param supervisorId
      * @param courseId
-     * @param teacherId
+     * @param classId
      * @return
      */
-    int deleteSupervisorCourse(int supervisorId, int courseId, int teacherId);
+    int deleteSupervisorCourse(int supervisorId, int courseId, int classId);
 
 
 }

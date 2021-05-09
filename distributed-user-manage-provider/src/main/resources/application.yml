@@ -14,7 +14,7 @@ spring:
     name: distribute-user-manage-provider
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/evaluation?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/evaluation?serverTimezone=UTC&allowMultiQueries=true
     username: root
     password: 105036
     type: com.alibaba.druid.pool.DruidDataSource
@@ -39,6 +39,10 @@ spring:
     timeout: 3000
   session:
     store-type: redis
+  boot:
+    admin:
+      client:
+        url: http://localhost:9005
 
 #设置向Eureka进行服务注册
 eureka:
@@ -49,6 +53,12 @@ eureka:
     #修改微服务名称application-id
     instance:
       instance-id: distribute-user-manage-provider-01
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 #swagger开关
 switch-swagger-up: true

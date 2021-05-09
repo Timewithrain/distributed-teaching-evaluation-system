@@ -1,6 +1,7 @@
 package com.watermelon.api.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.EvaluationItem;
 
 import java.util.List;
@@ -11,7 +12,9 @@ public interface EvaluationItemService {
      * @param rid
      * @return
      */
-    List<EvaluationItem> findList(int rid);
+    List<EvaluationItem> listEvaluationByRoleId(int rid);
+
+    IPage<EvaluationItem> searchEvaluationByRoleId(int startPage, int pageSize, String roleId, String str);
 
     /**
      * 修改评价项
@@ -34,9 +37,4 @@ public interface EvaluationItemService {
      */
     int deleteEvaluationItem(int id);
 
-    /**
-     * 获取所有角色对应的评价列表
-     * @return
-     */
-    JSONObject findLists();
 }

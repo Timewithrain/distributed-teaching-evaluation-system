@@ -4,9 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.TeacherMapper">
 
-    <select id="getTeacherById" parameterType="int" resultType="Teacher">
+    <select id="getTeacherById" parameterType="int" resultType="com.watermelon.api.entity.Teacher">
         select t.teacher_id as id,
                t.name,
+               t.department_id as "department.id",
                d.name as "department.name",
                t.gender,
                t.birth,
@@ -21,7 +22,7 @@
         from teacher as t, department as d where t.department_id=d.department_id and t.teacher_id=#{id}
     </select>
 
-    <insert id="addTeacher" parameterType="Teacher">
+    <insert id="addTeacher" parameterType="com.watermelon.api.entity.Teacher">
         insert into teacher (teacher_id, department_id, name, gender, birth, region, total_class,
                              entrance_date, job_title, grant_date, political_status, degree, graduate_school)
         values(
@@ -40,7 +41,7 @@
                   #{graduateSchool});
     </insert>
 
-    <update id="updateTeacher" parameterType="Teacher">
+    <update id="updateTeacher" parameterType="com.watermelon.api.entity.Teacher">
         update teacher set
                            teacher_id = #{id},
                            name = #{name},
@@ -69,7 +70,7 @@
         select max(user_id) from user
     </select>
 
-    <select id="listTeacher" resultType="Teacher">
+    <select id="listTeacher" resultType="com.watermelon.api.entity.Teacher">
         select t.teacher_id as id,
                t.name,
                d.department_id as "department.id",
@@ -87,7 +88,47 @@
         from teacher as t, department as d where t.department_id=d.department_id
     </select>
 
-    <select id="listCourseByTeacherId" parameterType="int" resultType="Course">
+    <select id="listTeacherByDepartmentId" resultType="com.watermelon.api.entity.Teacher">
+        select t.teacher_id as id,
+               t.name,
+               d.department_id as "department.id",
+               d.name as "department.name",
+               t.gender,
+               t.birth,
+               t.region,
+               t.total_class as totalClass,
+               t.entrance_date as entranceDate,
+               t.job_title as jobTitle,
+               t.grant_date as grantDate,
+               t.political_status as politicalStatus,
+               t.degree,
+               t.graduate_school as graduateSchool
+        from teacher as t, department as d
+        where t.department_id=d.department_id and d.department_id=#{departmentId}
+    </select>
+
+    <select id="searchTeacher" parameterType="String" resultType="com.watermelon.api.entity.Teacher">
+        select t.teacher_id as id,
+               t.name,
+               d.department_id as "department.id",
+               d.name as "department.name",
+               t.gender,
+               t.birth,
+               t.region,
+               t.total_class as totalClass,
+               t.entrance_date as entranceDate,
+               t.job_title as jobTitle,
+               t.grant_date as grantDate,
+               t.political_status as politicalStatus,
+               t.degree,
+               t.graduate_school as graduateSchool
+        from teacher as t, department as d
+        where t.department_id=d.department_id
+              and (t.name like '%${param2}%' or d.name like '%${param2}%')
+              and d.department_id like '%${param3}%'
+    </select>
+
+    <select id="listCourseByTeacherId" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,

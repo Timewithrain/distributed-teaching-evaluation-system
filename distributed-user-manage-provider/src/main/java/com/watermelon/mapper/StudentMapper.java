@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Student;
@@ -24,10 +25,12 @@ public interface StudentMapper {
 
     List<Student> listStudentWithNoCourse();
 
-    List<Student> listStudentWithNoCourse(Page<Course> page);
+    IPage<Student> listStudentWithNoCourse(Page<Course> page);
 
-    List<Student> listStudentByClassId(Page<Course> page,int classId);
+    List<Student> listStudentByClassId(int classId);
 
-    List<Student> searchStudent(Page<Course> page,String str);
+    IPage<Student> listStudentByClassId(Page<Course> page, int classId);
+
+    IPage<Student> searchStudent(Page<Course> page,String str, String classId, String departmentId);
 
 }

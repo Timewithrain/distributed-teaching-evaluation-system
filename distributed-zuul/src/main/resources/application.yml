@@ -12,7 +12,10 @@ spring:
     timeout: 3000
   session:
     store-type: redis
-
+  boot:
+    admin:
+      client:
+        url: http://localhost:9005
 
 eureka:
   client:
@@ -25,6 +28,8 @@ eureka:
 zuul:
   #将所有header字段设为敏感字段，否则无法正常获取sessionId
   sensitive-headers: "*"
+  #在Zuul中忽略跨域头部信息，避免跨域重复配置
+  ignored-headers: Access-Control-Allow-Origin,H-APP-Id,Token,APPToken
   routes:
     distribute-user-manage-provider:
       serviceId: distribute-user-manage-provider
@@ -33,19 +38,40 @@ zuul:
     distribute-course-manage-provider:
       serviceId: distribute-course-manage-provider
       path: /course-manager/**
+    distribute-evaluation-manage-provider:
+      serviceId: distribute-evaluation-manage-provider
+      path: /evaluation-manager/**
   #添加前置url
 #  prefix: /watermelon
 #  #忽略服务名，限制通过服务名直接获取后台服务，保护服务
 #  ignored-services: distribute-user-manage-provider
 
+#向dashboard监控服务提供监控端口
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-security:
-  oauth2:
-    client:
-      access-token-uri: http://localhost:9004/auth/oauth/token
-      user-authorization-uri: http://localhost:9004/auth/oauth/authorize
-      client-id: web
-    resource:
-      user-info-uri:  http://localhost:9004/auth/api/member
-      prefer-token-info: false
+#配置超时时间限制，避免Zuul服务访问超时
+ribbon:
+  ConnectTimeout: 5000 # 连接超时时间(ms)
+  ReadTimeout: 5000 # 通信超时时间(ms)
+hystrix:
+  command:
+    default:
+    execution:
+    isolation:
+    thread:
+    timeoutInMilliseconds: 60000 # 设置hystrix的超时时间为6000ms
+
+#security:
+#  oauth2:
+#    client:
+#      access-token-uri: http://localhost:9004/auth/oauth/token
+#      user-authorization-uri: http://localhost:9004/auth/oauth/authorize
+#      client-id: web
+#    resource:
+#      user-info-uri:  http://localhost:9004/auth/api/member
+#      prefer-token-info: false
 

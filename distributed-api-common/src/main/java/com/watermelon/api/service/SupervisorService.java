@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Supervisor;
 
@@ -10,9 +11,11 @@ public interface SupervisorService {
     List<Supervisor> getAllSupervisor();
 
     // 设置督导可评价的课程
-    int addSupervisorCourse(int supervisorId, int courseId, int teacherId);
+    int addSupervisorCourse(int supervisorId, int courseId, int classId);
 
-    int deleteSupervisorCourse(int supervisorId, int courseId, int teacherId);
+    void addSupervisorClass(int supervisorId, int classId);
+
+    int deleteSupervisorCourse(int supervisorId, int courseId, int classId);
 
     Supervisor getSupervisorById(int id);
 
@@ -22,8 +25,8 @@ public interface SupervisorService {
 
     void deleteSupervisor(int id);
 
-    List<Supervisor> listSupervisor(int startPage, int pageSize);
+    IPage<Supervisor> searchSupervisor(int startPage, int pageSize, String str);
 
-    List<Course> listCourseBySupervisorId(int startPage, int pageSize, int id);
+    IPage<Course> listCourseBySupervisorId(int startPage, int pageSize, int id);
 
 }

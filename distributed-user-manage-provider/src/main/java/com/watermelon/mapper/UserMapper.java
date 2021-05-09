@@ -1,5 +1,6 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.User;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,11 +14,15 @@ public interface UserMapper {
 
     List<User> listUser(Page<User> page);
 
+    IPage<User> searchUser(Page<User> page, String str);
+
     int getUserNumber();
 
     User getUserById(int id);
 
-    User getUserByName(String name);
+    List<User> getUserByName(String name);
+
+    User getUserByIdNumber(String idNumber);
 
     int addUser(User user);
 

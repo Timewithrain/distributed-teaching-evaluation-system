@@ -45,9 +45,9 @@ public class ExceptionControllerAdvice {
     }
 
     //其他异常
-    @ExceptionHandler
-    public ResultUtil exceptionHandler(Exception e) {
-        return ResultUtil.error(StatusCode.EXCEPTION_ERROR);
-    }
+//    @ExceptionHandler
+//    public ResultUtil exceptionHandler(Exception e) {
+//        return ResultUtil.error(StatusCode.EXCEPTION_ERROR);
+//    }
 
 }

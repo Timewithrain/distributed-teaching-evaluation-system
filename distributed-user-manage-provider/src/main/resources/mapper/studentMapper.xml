@@ -4,18 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.StudentMapper">
 
-    <select id="getStudentById" parameterType="int" resultType="Student">
-        select student_id as id,
-               name,
-               gender,
-               birth,
-               region,
-               score,
-               entrance_date as entranceDate
-        from student where student_id=#{id}
+    <select id="getStudentById" parameterType="int" resultType="com.watermelon.api.entity.Student">
+        select s.student_id as id,
+               s.name,
+               s.gender,
+               s.birth,
+               s.region,
+               s.score,
+               s.entrance_date as entranceDate,
+               c.class_id as "aclass.id",
+               c.name as "aClass.name",
+               c.number as "aClass.number",
+               c.grade as "aClass.grade",
+               c.department_id as "aClass.department.id",
+               (select name from department where department_id=c.department_id)
+               as "aClass.department.name"
+        from student s, class c
+        where s.class_id=c.class_id
+        and student_id=#{id}
     </select>
 
-    <insert id="addStudent" parameterType="Student">
+    <insert id="addStudent" parameterType="com.watermelon.api.entity.Student">
         insert into student (student_id, class_id, name, gender, birth, region, score, entrance_date)
         values(
                   #{id},
@@ -28,7 +37,7 @@
                   #{entranceDate});
     </insert>
 
-    <update id="updateStudent" parameterType="Student">
+    <update id="updateStudent" parameterType="com.watermelon.api.entity.Student">
         update student set
                            class_id = #{aClass.id},
                            name = #{name},
@@ -48,7 +57,7 @@
         select max(user_id) from user
     </select>
 
-    <select id="listStudentWithNoCourse" resultType="Student">
+    <select id="listStudentWithNoCourse" resultType="com.watermelon.api.entity.Student">
         select s.student_id as id,
                s.name,
                s.gender,
@@ -66,7 +75,7 @@
         where s.class_id=c.class_id
     </select>
 
-    <select id="listStudentByClassId" parameterType="int" resultType="Student">
+    <select id="listStudentByClassId" parameterType="int" resultType="com.watermelon.api.entity.Student">
         select student_id as id,
                name,
                gender,
@@ -77,7 +86,7 @@
         from student where class_id=#{param2}
     </select>
 
-    <select id="searchStudent" parameterType="String" resultType="Student">
+    <select id="searchStudent" parameterType="String" resultType="com.watermelon.api.entity.Student">
         select s.student_id as id,
                s.name,
                s.gender,
@@ -92,8 +101,10 @@
                c.department_id as "aClass.departmentId"
         from student as s,
              class as c
-        where s.class_id=c.class_id and
-            s.name like '%${param2}%'
+        where s.class_id=c.class_id
+        and s.name like '%${param2}%'
+        and s.class_id like '%${param3}%'
+        and s.class_id in (select class_id from class where department_id like '%${param4}%')
     </select>
 
 </mapper>

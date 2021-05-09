@@ -1,5 +1,7 @@
 package com.watermelon.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Teacher;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface TeacherMapper {
+public interface TeacherMapper extends BaseMapper<Teacher> {
 
     Teacher getTeacherById(int id);
 
@@ -24,9 +26,15 @@ public interface TeacherMapper {
 
     int getMaxUserId();
 
-    List<Teacher> listTeacher(Page<Teacher> page);
+    IPage<Teacher> listTeacher(IPage<Teacher> page);
 
     List<Teacher> listTeacher();
 
-    List<Course> listCourseByTeacherId(Page<Course> page,int teacherId);
+    IPage<Course> listCourseByTeacherId(IPage<Course> page,int teacherId);
+
+    List<Teacher> listTeacherByDepartmentId(int departmentId);
+
+    List<Teacher> searchTeacher(String str, String departmentId);
+
+    IPage<Teacher> searchTeacher(IPage<Teacher> page, String str, String departmentId);
 }

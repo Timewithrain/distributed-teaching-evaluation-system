@@ -1,5 +1,6 @@
 package com.watermelon.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.Class;
 import com.watermelon.api.entity.Course;
@@ -58,19 +59,27 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> listStudentWithNoCourse(int startPage, int pageSize) {
+    public void deleteStudentByClassId(int classId) {
+        List<Student> list = studentMapper.listStudentByClassId(classId);
+        for (Student s : list) {
+            deleteStudent(s.getId());
+        }
+    }
+
+    @Override
+    public IPage<Student> listStudentWithNoCourse(int startPage, int pageSize) {
         Page<Course> page = new Page<>(startPage,pageSize);
-        List<Student> list = studentMapper.listStudentWithNoCourse(page);
-        for (Student s : list){
+        IPage<Student> list = studentMapper.listStudentWithNoCourse(page);
+        for (Student s : list.getRecords()){
             s = addRoleFieldOfStudent(s);
         }
         return list;
     }
 
     @Override
-    public List<Student> listStudent(int startPage, int pageSize) {
-        List<Student> list = studentMapper.listStudentWithNoCourse(new Page<>(startPage,pageSize));
-        for (Student s : list){
+    public IPage<Student> listStudent(int startPage, int pageSize) {
+        IPage<Student> list = studentMapper.listStudentWithNoCourse(new Page<>(startPage,pageSize));
+        for (Student s : list.getRecords()){
             s = addRoleFieldOfStudent(s);
             s = addCourseListFieldOfStudent(s);
         }
@@ -78,10 +87,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> listStudentByClassId(int startPage, int pageSize,int calssId) {
+    public IPage<Student> listStudentByClassId(int startPage, int pageSize,int calssId) {
         Page<Course> page = new Page<>(startPage,pageSize);
-        List<Student> list = studentMapper.listStudentByClassId(page,calssId);
-        for (Student s : list){
+        IPage<Student> list = studentMapper.listStudentByClassId(page,calssId);
+        for (Student s : list.getRecords()){
             s = addRoleFieldOfStudent(s);
             s = addCourseListFieldOfStudent(s);
         }
@@ -89,9 +98,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> searchStudent(int startPage, int pageSize, String str) {
-        List<Student> list = studentMapper.searchStudent(new Page<>(startPage,pageSize),str);
-        for (Student s : list){
+    public IPage<Student> searchStudent(int startPage, int pageSize, String str, String classId, String departmentId) {
+        IPage<Student> list = studentMapper.searchStudent(new Page<>(startPage,pageSize),str, classId, departmentId);
+        for (Student s : list.getRecords()){
             s = addRoleFieldOfStudent(s);
             s = addCourseListFieldOfStudent(s);
         }

@@ -3,19 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.SupervisorMapper">
-    <select id="getAllSupervisor" resultType="Supervisor">
+    <select id="getAllSupervisor" resultType="com.watermelon.api.entity.Supervisor">
         select supervisor_id as id,name,gender from supervisor order by name
     </select>
 
-    <select id="getSupervisorById" parameterType="int" resultType="Supervisor">
+    <select id="getSupervisorById" parameterType="int" resultType="com.watermelon.api.entity.Supervisor">
         select supervisor_id as id,name,gender from supervisor where supervisor_id=#{id}
     </select>
 
-    <insert id="addSupervisor" parameterType="Supervisor">
+    <insert id="addSupervisor" parameterType="com.watermelon.api.entity.Supervisor">
         insert into supervisor (supervisor_id, name, gender) values(#{id},#{name},#{gender});
     </insert>
 
-    <update id="updateSupervisor" parameterType="Supervisor">
+    <update id="updateSupervisor" parameterType="com.watermelon.api.entity.Supervisor">
         update supervisor set name=#{name},gender=#{gender} where supervisor_id=#{id}
     </update>
 
@@ -27,11 +27,11 @@
         select max(user_id) from user
     </select>
 
-    <select id="listSupervisor" resultType="Supervisor">
-        select supervisor_id as id,name,gender from supervisor
+    <select id="searchSupervisor" resultType="com.watermelon.api.entity.Supervisor">
+        select supervisor_id as id,name,gender from supervisor where name like '%${param2}%'
     </select>
 
-    <select id="listCourseBySupervisorId" parameterType="int" resultType="Course">
+    <select id="listCourseBySupervisorId" parameterType="int" resultType="com.watermelon.api.entity.Course">
         select c.course_id as id,
                c.name,
                c.number,
@@ -50,22 +50,29 @@
                t.grant_date as "teacher.grantDate",
                t.political_status as "teacher.politicalStatus",
                t.degree as "teacher.degree",
-               t.graduate_school as "teacher.graduateSchool"
-        from (select course_id,teacher_id
-              from supervisor_course
-              where supervisor_id=#{param2}) as ct,
+               t.graduate_school as "teacher.graduateSchool",
+               cc.class_id as "classId"
+        from (select class_id,course_id from supervisor_course where supervisor_id=#{param2}) as scc,
+             class_course as cc,
              teacher as t,
              course as c
-        where t.teacher_id=ct.teacher_id and
-              c.course_id=ct.course_id
+        where t.teacher_id=cc.teacher_id
+          and c.course_id=cc.course_id
+          and cc.class_id=scc.class_id
+          and cc.course_id=scc.course_id
     </select>
 
+    <!--  插入前先验证表中不存在对应记录  -->
     <insert id="addSupervisorCourse">
-        insert into supervisor_course(supervisor_id,course_id,teacher_id) values(#{param1},#{param2},#{param3})
+        insert into supervisor_course (supervisor_id,course_id,class_id)
+        select #{param1},#{param2},#{param3}
+        from dual
+        where not exists
+            (select * from supervisor_course where supervisor_id=#{param1} and course_id=#{param2} and class_id=#{param3});
     </insert>
 
     <delete id="deleteSupervisorCourse">
         delete from supervisor_course
-        where supervisor_id=#{param1} and course_id=#{param2} and teacher_id=#{param3}
+        where supervisor_id=#{param1} and course_id=#{param2} and class_id=#{param3}
     </delete>
 </mapper>

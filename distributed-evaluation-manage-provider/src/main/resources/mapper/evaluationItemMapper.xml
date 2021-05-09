@@ -4,21 +4,26 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.EvaluationItemMapper">
 
-    <select id="getEvaluationsByRoleId" parameterType="int" resultType="EvaluationItem">
-        select * from evaluation_item e where role_id=#{id} order by weight desc
+    <select id="listEvaluationByRoleId" parameterType="int" resultType="com.watermelon.api.entity.EvaluationItem">
+        select * from evaluation_item e where role_id=#{id} order by rand() limit 6
     </select>
 
-    <select id="getEvaluationItemById" parameterType="int" resultType="EvaluationItem">
+    <select id="searchEvaluationItem" parameterType="String" resultType="com.watermelon.api.entity.EvaluationItem">
+        select * from evaluation_item e
+        where role_id like '%${param2}%' and content like '%${param3}%'
+        order by weight desc
+    </select>
+
+    <select id="getEvaluationItemById" parameterType="int" resultType="com.watermelon.api.entity.EvaluationItem">
         select * from evaluation_item where id=#{id}
     </select>
 
-
-    <insert id="insertEvaluationItem" parameterType="EvaluationItem">
+    <insert id="insertEvaluationItem" parameterType="com.watermelon.api.entity.EvaluationItem">
         insert into evaluation_item(content,role_id,weight) values(#{content},#{roleId},#{weight});
     </insert>
 
-    <update id="updateEvaluationItem" parameterType="EvaluationItem">
-        update evaluation_item set content=#{content},weight=#{weight} where id=#{id}
+    <update id="updateEvaluationItem" parameterType="com.watermelon.api.entity.EvaluationItem">
+        update evaluation_item set content=#{content},role_id=#{roleId},weight=#{weight} where id=#{id}
     </update>
 
     <delete id="deleteEvaluationItem" parameterType="int">

@@ -1,5 +1,6 @@
 package com.watermelon.api.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.watermelon.api.entity.Course;
 import com.watermelon.api.entity.Teacher;
 
@@ -15,8 +16,17 @@ public interface TeacherService {
 
     void deleteTeacher(int id);
 
-    List<Teacher> listTeacher(int startPage, int pageSize);
+    void deleteTeacherByDepartmentId(int departmentId);
 
-    List<Course> listCourseByTeacherId(int startPage, int pageSize, int teacherId);
+    IPage<Teacher> listTeacher(int startPage, int pageSize);
 
+    List<Teacher> listAllTeacher();
+
+    List<Teacher> listTeacherByDepartmentId(int departmentId);
+
+    IPage<Course> listCourseByTeacherId(int startPage, int pageSize, int teacherId);
+
+    List<Teacher> searchAllTeacher(String str, String departmentId);
+
+    IPage<Teacher> searchTeacher(int startPage, int pageSize, String str, String departmentId);
 }

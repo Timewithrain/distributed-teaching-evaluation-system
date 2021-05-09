@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.watermelon.api.entity.IndividualEvaluation;
+import com.watermelon.api.entity.SummaryEvaluation;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.service.EvaluationService;
 import com.watermelon.exception.MyException;
 import com.watermelon.api.util.StatusCode;
 import com.watermelon.api.util.ResultUtil;
+import com.watermelon.service.RemoteCourseServiceImpl;
 import com.watermelon.service.RemoteUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,62 +34,9 @@ public class EvaluationController {
     @Autowired
     private RemoteUserService userService;
 
-    /**
-     * 教师获取可评价的课程列表，传入courseName课程名参数用于对课程进行模糊匹配
-     * @param startPage 起始页
-     * @param pageSize  单页容量
-     * @param courseName 课程名
-     * @param session   会话
-     * @return
-     */
-    @GetMapping("/teacher/courses")
-    public Object findEvaluCoursesOfTeacher(@NotNull Integer startPage,@NotNull Integer pageSize,String courseName,HttpSession session){
-        Object username = session.getAttribute("username");
-        if(username == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        User user = userService.getUserByName((String) username);
-        return ResultUtil.success(evaluationService.getCoursesByTeacherId(user.getId(),startPage,pageSize,courseName));
-    }
+    @Autowired
+    private RemoteCourseServiceImpl courseService;
 
-    /**
-     * 学生获取可评价的课程列表，传入课程名用于模糊匹配
-     * @param startPage 起始页
-     * @param pageSize 单页容量
-     * @param courseName 课程名
-     * @param session 会话
-     * @return
-     */
-    @GetMapping("/student/courses")
-    public Object findCoursesByStuId(Integer startPage, Integer pageSize,String courseName,HttpSession session){
-        Object username = session.getAttribute("username");
-        if(username == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        User user = userService.getUserByName((String) username);
-        return ResultUtil.success(evaluationService.getCoursesByStuId(user.getId(),startPage,pageSize,courseName));
-    }
-
-    /**
-     * 督导获取可评价的课程列表，传入课程名用于模糊匹配，返回分页后的课程信息
-     * @param startPage 起始页
-     * @param pageSize 单页容量
-     * @param courseName 课程名
-     * @param session 会话
-     * @return Page<Course>
-     */
-    @GetMapping("/supervisor/courses")
-    public Object findTeachersBySuperId(int startPage, int pageSize,String courseName, HttpSession session){
-        Object username = session.getAttribute("username");
-        if(username == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        User user = userService.getUserByName((String) username);
-        return ResultUtil.success(evaluationService.getCoursesBySuperId(user.getId(),startPage,pageSize,courseName));
-    }
 
     /**
      * 获取督导本人所作过的评价，根据督导、教师、课程唯一确定一条评价
@@ -96,7 +45,7 @@ public class EvaluationController {
      * @return IndividualEvaluation
      */
     @GetMapping("/superIndividualEvaluation")
-    public Object findSuperIndividualEvaluation(int teacherId, int courseId,HttpSession session){
+    public Object listSuperIndividualEvaluation(int teacherId, int courseId,HttpSession session){
         User user = userService.getUserByName((String) session.getAttribute("username"));
         if(user == null) {
             ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
@@ -127,8 +76,8 @@ public class EvaluationController {
      * @param courseId 课程Id
      * @return IndividualEvaluation
      */
-    @GetMapping("/studentIndividualEvaluation")
-    public Object findStudentIndividualEvaluation(int teacherId,int courseId,HttpSession session){
+    @GetMapping("/listStudentIndividualEvaluation")
+    public Object listStudentIndividualEvaluation(int teacherId,int courseId,HttpSession session){
         User user = userService.getUserByName((String) session.getAttribute("username"));
         if(user == null) {
             ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
@@ -137,26 +86,20 @@ public class EvaluationController {
         return ResultUtil.success(evaluationService.getStudentIndiEvaluation(user.getId(),teacherId,courseId));
     }
 
+    /***************************** 已完善 *****************************/
     /**
      * 添加学生的个人评价
      * @param individualEvaluation 学生评价
-     * @param session 会话
      * @return
      */
-    @PostMapping("/studentIndividualEvaluation")
-    public Object addStudentIndividualEvaluation(@RequestBody @Valid IndividualEvaluation individualEvaluation,HttpSession session){
-        User user = userService.getUserByName((String) session.getAttribute("username"));
-        if(user == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        individualEvaluation.setFromId(user.getId());
-        individualEvaluation.setTotalScore(((double)(individualEvaluation.getScore1() + individualEvaluation.getScore2() + individualEvaluation.getScore3() + individualEvaluation.getScore4() + individualEvaluation.getScore5() + individualEvaluation.getScore6())/6));
-        evaluationService.addStudentIndiEvaluation(individualEvaluation);
+    @PostMapping("/addStudentIndividualEvaluation")
+    public ResultUtil addStudentIndividualEvaluation(@RequestBody @Valid IndividualEvaluation individualEvaluation) {
+        evaluationService.addIndividualEvaluation(individualEvaluation);
         return ResultUtil.success();
     }
 
     /**
+     * 不使用
      * 添加教师个人评价
      * @param individualEvaluation 教师评价
      * @param session 会话
@@ -180,26 +123,19 @@ public class EvaluationController {
             ResultUtil resultUtil = ResultUtil.error(StatusCode.EXCEPTION_ERROR,"此评价已完成，不可修改");
             throw new MyException(resultUtil);
         }
-        evaluationService.addTeacherIndiEvaluation(individualEvaluation);
+        evaluationService.addIndividualEvaluation(individualEvaluation);
         return ResultUtil.success();
     }
 
+    /***************************** 已完善 *****************************/
     /**
      * 添加督导评价
      * @param individualEvaluation 督导评价
-     * @param session 会话
      * @return
      */
-    @PostMapping("/superIndividualEvaluation")
-    public Object addSuperIndividualEvaluation(@RequestBody @Valid IndividualEvaluation individualEvaluation,HttpSession session){
-        User user = userService.getUserByName((String) session.getAttribute("username"));
-        if(user == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        individualEvaluation.setFromId(user.getId());
-        individualEvaluation.setTotalScore(((double)(individualEvaluation.getScore1() + individualEvaluation.getScore2() + individualEvaluation.getScore3() + individualEvaluation.getScore4() + individualEvaluation.getScore5() + individualEvaluation.getScore6())/6));
-        evaluationService.addSuperIndiEvaluation(individualEvaluation);
+    @PostMapping("/addSupervisorIndividualEvaluation")
+    public Object addSupervisorIndividualEvaluation(@RequestBody @Valid IndividualEvaluation individualEvaluation){
+        evaluationService.addIndividualEvaluation(individualEvaluation);
         return ResultUtil.success();
     }
 
@@ -213,121 +149,93 @@ public class EvaluationController {
      * @return List<Map>
      */
     @GetMapping("/summaryEvaluation/byTeacherId")
-    public Object findSummaryEvaluation(int courseId,HttpSession session){
+    public Object listSummaryEvaluation(int courseId,HttpSession session){
         User user = userService.getUserByName((String) session.getAttribute("username"));
         if(user == null) {
             ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
             throw new MyException(resultUtil);
         }
-        return ResultUtil.success(evaluationService.getSummaryEvaluation(user.getId(),courseId));
+        return ResultUtil.success(evaluationService.listSummaryEvaluation(user.getId(),courseId));
     }
 
     /**
-     * 管理员获取教师总评价
-     * <p>首先获取根据课程名称获取课程及课程对应的教师信息，根据获取的课程id和教师id获取评价，
-     * 计算评价的加权平均结果，存入
-     * <p>根据学生、教师、督导对于课程的评价计算加权平均值后返回教师总评价
-     * <p>学生权重: 0.3
-     * <p>教师权重: 0.3
-     * <p>督导权重: 0.4
-     * @param startPage 起始页
-     * @param pageSize 单页容量
-     * @param courseName 课程名
-     * @return JSONObject
-     */
-    @GetMapping("/admin/summaryEvaluation")
-    public Object findAllSummaryEvaluation(int startPage,int pageSize,String courseName) {
-        Page p = (Page) evaluationService.getCoursesByAdmin(startPage,pageSize,courseName);
-        JSONObject page =  new JSONObject();
-        page.put("total",p.getTotal());
-        page.put("size",p.getSize());
-        page.put("current",p.getCurrent());
-        page.put("pages",p.getPages());
-        JSONArray records = (JSONArray) JSONArray.toJSON(p.getRecords());
-        for(int j = 0;j < records.size();j++) {
-            int courseId = ((JSONObject) records.get(j)).getInteger("id");
-            int teacherId = ((JSONObject) records.get(j)).getJSONObject("teacher").getInteger("id");
-            List<Map> summaryList = evaluationService.getSummaryEvaluation(teacherId,courseId);
-            Double totalAvg = 0.0;
-            //若其中一个角色未评价，则不返回
-            int count = 0;
-            for(int i=0;i < summaryList.size();i++) {
-                switch ((String)((HashMap)summaryList.get(i)).get("role_name")) {
-                    case "学生":
-                        totalAvg += Double.parseDouble((String.valueOf(((HashMap)summaryList.get(i)).get("total_score"))) ) * 0.3;
-                        count++;
-                        break;
-                    case "教师":
-                        totalAvg += Double.parseDouble((String.valueOf(((HashMap)summaryList.get(i)).get("total_score"))) ) * 0.3;
-                        count++;
-                        break;
-                    case "督导":
-                        totalAvg += Double.parseDouble(String.valueOf( ((HashMap)summaryList.get(i)).get("total_score"))) * 0.4;
-                        count++;
-                        break;
-                }
-            }
-            if(count >= 3) {
-                ((JSONObject) records.get(j)).put("totalAvg",new DecimalFormat("#.00").format(totalAvg));
-            }
-        }
-        page.put("records",records);
-        return ResultUtil.success(JSONObject.parseObject(page.toJSONString()));
-    }
-
-    /**
-     * 管理员通过教师id获取详细评价信息，教师id、课程id确定一组评价记录，组别依据评价者角色区分
+     * 管理员通过教师id获取总评价信息，教师id、课程id确定一组评价记录，组别依据评价者角色区分
      * @param teacherId 教师id
      * @param courseId 课程id
      * @return List<Map>
      */
     @GetMapping("/admin/summaryEvaluation/byTeacherId")
-    public Object findSummaryEvaluationByTeacher(Integer teacherId,Integer courseId){
-        return ResultUtil.success(evaluationService.getSummaryEvaluation(teacherId,courseId));
+    public Object listSummaryEvaluationByTeacherId(Integer teacherId,Integer courseId){
+        return ResultUtil.success(evaluationService.listSummaryEvaluation(teacherId,courseId));
     }
 
+    /***************************** 已完善 *****************************/
     /**
-     * 获取教师的所有课程列表
-     * @param startPage 起始页
-     * @param pageSize 单页容量
-     * @param session 会话
-     * @return Page<Course>
-     */
-    @GetMapping("/teacher/courseList")
-    public Object findAllCourses(@NotNull Integer startPage,@NotNull Integer pageSize,HttpSession session) {
-        User user = userService.getUserByName((String) session.getAttribute("username"));
-        if(user == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        return ResultUtil.success(evaluationService.getCoursesOfTeacher(user.getId(),startPage,pageSize));
-    }
-
-    /**
-     * 获取教师自身的评价，由教师id、课程id、角色id唯一确定一条评价数据，获取评价的建议字段
-     * @param courseId
-     * @param roleId
+     * 管理员获取该所有课程的总评(分页)
+     * 总评中包含个人评价
      * @param startPage
      * @param pageSize
-     * @param session
-     * @return List<Map>
+     * @return
      */
-    @GetMapping("/teacher/advices")
-    public Object findAdvices(@NotNull Integer courseId, Integer roleId, Integer startPage, Integer pageSize, HttpSession session) {
-        User user = userService.getUserByName((String) session.getAttribute("username"));
-        if(user == null) {
-            ResultUtil resultUtil = ResultUtil.error(StatusCode.UNAUTHORIZED);
-            throw new MyException(resultUtil);
-        }
-        IPage p = evaluationService.getAdvices(user.getId(),courseId,roleId,startPage,pageSize);
-        List newList = new ArrayList();
-        List list = p.getRecords();
-        for(Object advice:list) {
-            Map<String,String> newMap = new HashMap<String,String>();
-            newMap.put("adviceContent", (String) advice);
-            newList.add(newMap);
-        }
-        p.setRecords(newList);
-        return ResultUtil.success(p);
+    @GetMapping("/listSummaryEvaluation")
+    public ResultUtil listSummaryEvaluation(int startPage, int pageSize){
+        IPage<SummaryEvaluation> evaluationPage = evaluationService.listSummaryEvaluation(startPage, pageSize);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",evaluationPage.getRecords());
+        map.put("total",evaluationPage.getTotal());
+        return ResultUtil.success(map);
+    }
+
+    /***************************** 已完善 *****************************/
+    /**
+     * 教师获取该自己所授课程的总评(分页)
+     * 总评中包含个人评价
+     * @param startPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/listSummaryEvaluationByTeacherId")
+    public ResultUtil listSummaryEvaluationByTeacherId(int startPage, int pageSize, int teacherId){
+        IPage<SummaryEvaluation> evaluationPage = evaluationService.listSummaryEvaluationByTeacherId(startPage, pageSize, teacherId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",evaluationPage.getRecords());
+        map.put("total",evaluationPage.getTotal());
+        return ResultUtil.success(map);
+    }
+
+    /***************************** 已完善 *****************************/
+    /**
+     * 学生根据班级ID获取该班级所有课程的总评(分页)
+     * 总评中包含个人评价
+     * @param startPage
+     * @param pageSize
+     * @param classId
+     * @return
+     */
+    @GetMapping("/listSummaryEvaluationByClassId")
+    public ResultUtil listSummaryEvaluationByClassId(int startPage, int pageSize, int classId){
+        IPage<SummaryEvaluation> evaluationPage = evaluationService.listSummaryEvaluationByClassId(startPage, pageSize, classId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",evaluationPage.getRecords());
+        map.put("total",evaluationPage.getTotal());
+        return ResultUtil.success(map);
+    }
+
+    /***************************** 已完善 *****************************/
+    /**
+     * 根据督导ID获取该督导的所有课程的总评(分页)
+     * 总评中包含个人评价
+     * @param startPage
+     * @param pageSize
+     * @param supervisorId
+     * @return
+     */
+    @GetMapping("/listSummaryEvaluationBySupervisorId")
+    public ResultUtil listSummaryEvaluationBySupervisorId(int startPage, int pageSize, int supervisorId){
+        IPage<SummaryEvaluation> evaluationPage = evaluationService.listSummaryEvaluationBySupervisorId(startPage, pageSize, supervisorId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",evaluationPage.getRecords());
+        map.put("total",evaluationPage.getTotal());
+        return ResultUtil.success(map);
     }
 }

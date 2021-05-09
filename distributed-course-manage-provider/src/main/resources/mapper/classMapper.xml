@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.watermelon.mapper.ClassMapper">
 
-    <select id="getClassById" parameterType="int" resultType="Class">
+    <select id="getClassById" parameterType="int" resultType="com.watermelon.api.entity.Class">
         select c.class_id as id,
                c.number,
                c.name,
@@ -14,10 +14,10 @@
         from class as c,
              department as d
         where d.department_id = c.department_id and
-            c.name=#{id}
+            c.class_id=#{id}
     </select>
 
-    <select id="getClassByName" parameterType="String" resultType="Class">
+    <select id="getClassByName" parameterType="String" resultType="com.watermelon.api.entity.Class">
         select c.class_id as id,
                c.number,
                c.name,
@@ -30,7 +30,7 @@
             c.name=#{name}
     </select>
 
-    <select id="listClass" resultType="Class">
+    <select id="listClass" resultType="com.watermelon.api.entity.Class">
         select c1.class_id as id,
                c1.number,
                c1.name,
@@ -41,12 +41,41 @@
              department as d where d.department_id = c1.department_id
     </select>
 
-    <insert id="addClass" parameterType="Class">
+    <select id="listClassByDepartmentId" resultType="com.watermelon.api.entity.Class">
+        select c1.class_id as id,
+               c1.number,
+               c1.name,
+               c1.grade,
+               d.department_id as "department.id",
+               d.name as "department.name"
+        from class as c1,department as d
+        where d.department_id = c1.department_id and d.department_id=#{departmentId}
+    </select>
+
+    <select id="searchClass" resultType="com.watermelon.api.entity.Class">
+        select c1.class_id as id,
+               c1.number,
+               c1.name,
+               c1.grade,
+               d.department_id as "department.id",
+               d.name as "department.name"
+        from class as c1,department as d
+        where d.department_id = c1.department_id
+        and ( c1.name like '%${param2}%'
+            and c1.grade like '%${param3}%'
+            and d.department_id like '%${param4}%' )
+    </select>
+
+    <select id="listGrade" resultType="String">
+        select distinct grade from class order by grade
+    </select>
+
+    <insert id="addClass" parameterType="com.watermelon.api.entity.Class">
         insert into class (class_id, department_id, number, name, grade)
         values(#{id},#{department.id},#{number},#{name},#{grade});
     </insert>
 
-    <update id="updateClass" parameterType="Class">
+    <update id="updateClass" parameterType="com.watermelon.api.entity.Class">
         update class set department_id=#{department.id},number=#{number},name=#{name},grade=#{grade}
         where class_id=#{id}
     </update>
@@ -69,5 +98,9 @@
 
     <select id="getMaxClassId" resultType="int">
         select max(class_id) from class
+    </select>
+
+    <select id="getClassNumber" resultType="int">
+        select count(*) from class
     </select>
 </mapper>

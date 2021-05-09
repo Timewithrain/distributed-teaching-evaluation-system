@@ -4,12 +4,15 @@ import com.watermelon.api.entity.Student;
 import com.watermelon.api.entity.User;
 import com.watermelon.api.service.StudentService;
 import com.watermelon.api.service.UserService;
+import com.watermelon.api.util.ResultUtil;
+import com.watermelon.api.util.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -21,19 +24,19 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping("/getStudent")
-    public Student getStudent(HttpServletRequest request){
+    public ResultUtil getStudent(HttpServletRequest request){
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
-        if (username!=null){
-            User user = userService.getUserByName(username);
-            return studentService.getStudentById(user.getId());
+        Integer id = (Integer) session.getAttribute("id");
+        if (id!=null){
+            Student student = studentService.getStudentById(id);
+            return ResultUtil.success(student);
         }else {
-            return null;
+            return ResultUtil.error(StatusCode.EXCEPTION_ERROR);
         }
     }
 
     @PutMapping("/updateStudent")
-    public void updateTeacher(@RequestBody(required=false) Student student) {
+    public void updateStudent(@RequestBody(required=false) Student student) {
         studentService.updateStudent(student);
     }
 
